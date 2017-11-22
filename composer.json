@@ -1,0 +1,32 @@
+{
+	"name": "chillerlan/php-traits",
+	"description": "Some useful traits for PHP 7+",
+	"homepage": "https://github.com/codemasher/php-traits",
+	"license": "MIT",
+	"type": "library",
+	"keywords": [
+		"trait", "php7"
+	],
+	"authors": [
+		{
+			"name": "Smiley",
+			"email": "smiley@chillerlan.net"
+		}
+	],
+	"require": {
+		"php": ">=7.0.3"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "6.4.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"chillerlan\\Traits\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"chillerlan\\TraitTest\\": "tests/"
+		}
+	}
+}
