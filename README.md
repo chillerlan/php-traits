@@ -1,0 +1,163 @@
+# php-traits
+
+A collection of (more or less) useful traits for PHP7+
+
+- `ClassLoader` - invokes objects of a given class and interface/type with an arbitrary count of constructor arguments
+- `Container` - provides a magic getter & setter as well as a `__toArray()` method
+- `Magic` - turns methods into magic properties
+
+[![version][packagist-badge]][packagist]
+[![license][license-badge]][license]
+[![Travis][travis-badge]][travis]
+[![Coverage][coverage-badge]][coverage]
+[![Scrunitizer][scrutinizer-badge]][scrutinizer]
+[![Code Climate][codeclimate-badge]][codeclimate]
+
+[packagist-badge]: https://img.shields.io/packagist/v/chillerlan/php-traits.svg
+[packagist]: https://packagist.org/packages/chillerlan/php-traits
+[license-badge]: https://img.shields.io/packagist/l/chillerlan/php-traits.svg
+[license]: https://github.com/codemasher/php-traits/blob/master/LICENSE
+[travis-badge]: https://img.shields.io/travis/codemasher/php-traits.svg
+[travis]: https://travis-ci.org/codemasher/php-traits
+[coverage-badge]: https://img.shields.io/codecov/c/github/codemasher/php-traits.svg
+[coverage]: https://codecov.io/github/codemasher/php-traits
+[scrutinizer-badge]: https://img.shields.io/scrutinizer/g/codemasher/php-traits.svg
+[scrutinizer]: https://scrutinizer-ci.com/g/codemasher/php-traits
+[codeclimate-badge]: https://img.shields.io/codeclimate/github/codemasher/php-traits.svg
+[codeclimate]: https://codeclimate.com/github/codemasher/php-traits
+
+## Documentation
+
+### Installation
+**requires [composer](https://getcomposer.org)**
+
+*composer.json* (note: replace `dev-master` with a version boundary)
+```json
+{
+	"require": {
+		"php": ">=7.0.3",
+		"chillerlan/php-traits": "dev-master"
+	}
+}
+```
+
+#### Manual installation
+Download the desired version of the package from [master](https://github.com/codemasher/php-traits/archive/master.zip) or 
+[release](https://github.com/codemasher/php-traits/releases) and extract the contents to your project folder.  After that:
+- run `composer install` to install the required dependencies and generate `/vendor/autoload.php`.
+- if you use a custom autoloader, point the namespace `chillerlan\Traits` to the folder `src` of the package 
+
+Profit!
+
+### Usage
+
+#### `ClassLoader`
+Simple usage:
+```php
+class MyClass{
+	use ClassLoader;
+	
+	protected function doStuff(string $class){
+		$obj = $this->loadClass(__NAMESPACE__.'\\Whatever\\'.$class);
+		
+		// do stuff
+	}
+}
+```
+
+Let's assume you have several classes that implement the same interface, but their constructors have different parameter counts, like so:
+```php
+class SomeClass implements MyInterface{
+	public funtion __construct($param_foo){}
+}
+
+class OtherClass implements MyInterface{
+	public funtion __construct($param_foo, $param_bar){}
+}
+```
+
+Initialize an object based on a selction
+
+```php
+class MyClass{
+	use ClassLoader;
+	
+	protected $classes = [
+		'foo' => SomeClass::class, 
+		'bar' => OtherClass::class
+	];
+	
+	protected funtion initInterface(string $whatever, $foo, $bar = null):MyInterface{
+	
+		foreach($this->classes as $what => $class){
+			if($whatever === $what){
+				return $this->loadClass($class, MyInterface::class, $foo, $bar);
+			}
+		}
+	
+	}
+}
+```
+
+
+#### `Container`
+```php
+class MyContainer{
+	use Container;
+
+	protected $foo;
+	protected $bar;
+}
+```
+
+```php
+// use it just like a \stdClass
+$container = new MyContainer;
+$container->foo = 'what';
+$container->bar = 'foo';
+
+// which is equivalent to 
+$container = new MyContainer(['bar' => 'foo', 'foo' => 'what']);
+
+// fetch all properties as array
+$container->__toArray(); // -> ['foo' => 'what', 'bar' => 'foo']
+
+//non-existing properties will be ignored:
+$container->nope = 'what';
+
+var_dump($container->nope); // -> null
+```
+
+
+#### `Magic`
+`Magic` works basically the same way as `Container`, except it accesses internal methods instead of properties.
+```php
+class MyMagicContainer{
+	use Magic;
+
+	protected $foo;
+
+	protected function magic_get_foo(){
+		// do whatever...
+		
+		return 'foo: '.$this->foo;
+	}
+
+	protected function magic_set_foo($value){
+		// do stuff with $value
+		// ...
+		
+		$this->foo = $value.'bar';
+	}
+}
+```
+
+```php
+$magic = new MyMagicContainer;
+
+$magic->foo = 'foo';
+
+var_dump($magic->foo); // -> foo: foobar
+
+```
+
