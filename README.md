@@ -5,6 +5,7 @@ A collection of (more or less) useful traits for PHP7+
 - `ClassLoader` - invokes objects of a given class and interface/type with an arbitrary count of constructor arguments
 - `Container` - provides a magic getter & setter as well as a `__toArray()` method
 - `Magic` - turns methods into magic properties
+- `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/)
 
 [![version][packagist-badge]][packagist]
 [![license][license-badge]][license]
@@ -161,3 +162,36 @@ var_dump($magic->foo); // -> foo: foobar
 
 ```
 
+#### `Enumerable`
+```php
+class MyEnumerableContainer{
+	use Enumerable;
+
+	public function __construct(array $data){
+		$this->array = $data;
+	}
+}
+```
+
+```php
+$enum = new MyEnumerableContainer($data);
+
+$enum
+	->__each(function($value, $index){
+		// do stuff
+		
+		$this->array[$index] = $stuff;
+	})
+	->__reverse()
+	->__to_array()
+;
+
+$arr = $enum->__map(function($value, $index){
+	// do stuff
+	
+	return $stuff;
+});
+
+$enum;
+
+```

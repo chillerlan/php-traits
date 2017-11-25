@@ -24,7 +24,7 @@ trait ClassLoader{
 	 *
 	 * @param mixed $params [optional] the following arguments will be passed to the $class constructor
 	 *
-	 * @return object of type $type
+	 * @return mixed of type $type
 	 * @throws \Exception
 	 */
 	public function loadClass(string $class, string $type = null, ...$params){
