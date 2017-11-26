@@ -45,9 +45,28 @@ trait Env{
 	 * @return bool|mixed
 	 */
 	protected function __getEnv(string $var){
-		$var   = strtoupper($var);
+		$var = strtoupper($var);
 
-		return array_key_exists($var, $_ENV) ? $_ENV[$var] : false;
+		if(array_key_exists($var, $_ENV)){
+			return $_ENV[$var];
+		}
+
+		$val = getenv($var);
+
+		if($val !== false){
+			return $val;
+		}
+
+		if(function_exists('apache_getenv')){
+			$val = apache_getenv($var);
+
+			if($val !== false){
+				return $val;
+ 			}
+
+ 		}
+
+		return false;
 	}
 
 	/**
@@ -63,6 +82,10 @@ trait Env{
 		// fill $_ENV explicitly, assuming variables_order="GPCS" (production)
 		$_ENV[$var] = $value;
 		putenv($var.'='.$value);
+
+		if(function_exists('apache_setenv')){
+			apache_setenv($var, $value);
+		}
 
 		return $this;
 	}

@@ -28,7 +28,7 @@ class EnvTest extends TestCase{
 
 	/**
 	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid file: foo\.env
+	 * @expectedExceptionMessage invalid file:
 	 */
 	public function testLoadInvalidFile(){
 		(new DotEnv('foo'))->load();
