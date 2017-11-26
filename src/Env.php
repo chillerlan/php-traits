@@ -83,6 +83,9 @@ trait Env{
 		$_ENV[$var] = $value;
 		putenv($var.'='.$value);
 
+		// fill also $_SERVER, in case putenv() doesn't (Linux only?)
+		$_SERVER[$var] = $value;
+
 		if(function_exists('apache_setenv')){
 			apache_setenv($var, $value);
 		}
