@@ -66,8 +66,6 @@ class EnvTest extends TestCase{
 		$this->assertSame('test', $_ENV['VAR']);
 		$this->assertSame('test', $this->dotenv->get('var'));
 		$this->assertSame('test', $this->dotenv->get('VAR'));
-		$this->assertSame('test', getenv('var'));
-
 		$this->assertSame($_ENV['VAR'], $this->dotenv->get('VAR'));
 
 		$this->assertSame('Oh here\'s some silly &%=ä$&/"§% value', $_ENV['TEST']); // stripped comment line
@@ -82,14 +80,11 @@ class EnvTest extends TestCase{
 
 		$this->dotenv->unset('TEST');
 		$this->assertFalse(isset($_ENV['TEST']));
-		$this->assertFalse(getenv('test'));
 		$this->assertFalse($this->dotenv->get('test'));
-
 
 		$this->dotenv->set('TESTVAR', 'some value: ${var3}');
 		$this->assertSame('some value: Hello World!', $_ENV['TESTVAR']);
 		$this->assertSame('some value: Hello World!', $this->dotenv->get('TESTVAR'));
-		$this->assertSame('some value: Hello World!', getenv('TESTVAR'));
 
 		$this->dotenv->clear();
 

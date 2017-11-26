@@ -22,6 +22,13 @@ namespace chillerlan\Traits;
 trait Env{
 
 	/**
+	 * a backup environment in case everything goes downhill
+	 *
+	 * @var array
+	 */
+	private $_ENV;
+
+	/**
 	 * @param string      $path
 	 * @param string|null $filename
 	 * @param bool|null   $overwrite
@@ -50,23 +57,20 @@ trait Env{
 		if(array_key_exists($var, $_ENV)){
 			return $_ENV[$var];
 		}
-
-		$val = getenv($var);
-
-		if($val !== false){
-			return $val;
+		elseif(function_exists('getenv')){
+			if($e = getenv($var) !== false){
+				return $e;
+			}
 		}
+		// @codeCoverageIgnoreStart
+		elseif(function_exists('apache_getenv')){
+			if($e = apache_getenv($var) !== false){
+				return $e;
+			}
+		}
+		// @codeCoverageIgnoreEnd
 
-		if(function_exists('apache_getenv')){
-			$val = apache_getenv($var);
-
-			if($val !== false){
-				return $val;
- 			}
-
- 		}
-
-		return false;
+		return $this->_ENV[$var] ?? false;
 	}
 
 	/**
@@ -79,12 +83,12 @@ trait Env{
 		$var   = strtoupper($var);
 		$value = $this->__parse($value);
 
-		// fill $_ENV explicitly, assuming variables_order="GPCS" (production)
-		$_ENV[$var] = $value;
 		putenv($var.'='.$value);
 
-		// fill also $_SERVER, in case putenv() doesn't (Linux only?)
-		$_SERVER[$var] = $value;
+		// fill $_ENV explicitly, assuming variables_order="GPCS" (production)
+		$_ENV[$var] = $value;
+		// a backup
+		$this->_ENV[$var] = $value;
 
 		if(function_exists('apache_setenv')){
 			apache_setenv($var, $value);
@@ -102,6 +106,7 @@ trait Env{
 		$var = strtoupper($var);
 
 		unset($_ENV[$var]);
+		unset($this->_ENV[$var]);
 		putenv($var);
 
 		return $this;
@@ -113,7 +118,8 @@ trait Env{
 	 * @return $this
 	 */
 	protected function __clearEnv(){
-		$_ENV = [];
+		$_ENV       = [];
+		$this->_ENV = [];
 
 		return $this;
 	}
