@@ -6,7 +6,6 @@ A collection of (more or less) useful traits for PHP7+
 - `Container` - provides a magic getter & setter as well as a `__toArray()` method
 - `Magic` - turns methods into magic properties
 - `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/)
-- `Env` - loads contents from a `.env` file into the environment (similar to [](vlucas/phpdotenv))
 
 [![version][packagist-badge]][packagist]
 [![license][license-badge]][license]
@@ -196,5 +195,3 @@ $arr = $enum->__map(function($value, $index){
 $enum;
 
 ```
-
-#### `Env`
