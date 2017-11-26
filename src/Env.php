@@ -92,9 +92,11 @@ trait Env{
 		// a backup
 		$this->_ENV[$var] = $value;
 
+		// @codeCoverageIgnoreStart
 		if(function_exists('apache_setenv')){
 			apache_setenv($var, $value);
 		}
+		// @codeCoverageIgnoreEnd
 
 		return $this;
 	}
