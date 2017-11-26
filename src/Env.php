@@ -18,6 +18,8 @@ namespace chillerlan\Traits;
  * $_ENV > getenv()!
  *
  * @link https://github.com/vlucas/phpdotenv
+ * @link http://php.net/variables-order
+ *
  */
 trait Env{
 
@@ -150,8 +152,6 @@ trait Env{
 	}
 
 	/**
-	 * @link http://php.net/variables-order
-	 *
 	 * @param array $data
 	 * @param bool  $overwrite
 	 *
@@ -169,7 +169,7 @@ trait Env{
 			$kv = array_map('trim', explode('=', $line, 2));
 
 			// skip empty and numeric keys, keys with spaces, existing keys that shall not be overwritten
-			if(empty($kv[0]) || is_numeric($kv[0]) || strpos($kv[0], ' ') !== false || (!$overwrite && array_key_exists($kv[0], $_ENV))){
+			if(empty($kv[0]) || is_numeric($kv[0]) || strpos($kv[0], ' ') !== false || (!$overwrite && $this->__getEnv($kv[0]) !== false)){
 				continue;
 			}
 
@@ -224,7 +224,7 @@ trait Env{
 		}
 
 		foreach($required as $var){
-			if(!$this->__getEnv($var) || $this->__getEnv($var) === null){
+			if($this->__getEnv($var) === false || $this->__getEnv($var) === null){
 				throw new TraitException('required variable not set: '.strtoupper($var));
 			}
 		}

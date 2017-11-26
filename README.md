@@ -6,6 +6,7 @@ A collection of (more or less) useful traits for PHP7+
 - `Container` - provides a magic getter & setter as well as a `__toArray()` method
 - `Magic` - turns methods into magic properties
 - `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/)
+- `Env` - loads contents from a `.env` file into the environment (similar to [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv))
 
 [![version][packagist-badge]][packagist]
 [![license][license-badge]][license]
@@ -194,4 +195,42 @@ $arr = $enum->__map(function($value, $index){
 
 $enum;
 
+```
+
+#### `Env`
+```
+# example .env
+FOO=bar
+BAR=foo
+WHAT=${BAR}-${FOO}
+```
+
+```php
+class MyClass{
+	use Env;
+	
+	protected $foo;
+	
+	public function __construct(){
+		// load and overwrite existing vars, require var "WHAT"
+		$this->__loadEnv(__DIR__.'/../config', '.env', ['what']);
+		
+		// will not overwrite
+		$this->__addEnv(__DIR__.'/../config', '.env', false, ['what']); 
+		
+		$this->foo = $_ENV['WHAT']; // -> foo-bar
+		// or
+		$this->foo = $this->__getEnv('WHAT');
+	}
+}
+```
+
+```php
+$env = new DotEnv(__DIR__.'/../config', '.env');
+$env->load(['foo']); // foo is required
+
+$foo = $env->get('FOO'); // -> bar
+
+$foo = $env->set('foo', 'whatever');
+$foo = $env->get('FOO'); // -> whatever
 ```
