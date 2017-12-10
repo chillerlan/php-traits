@@ -25,16 +25,15 @@ class ContainerTraitTest extends TestCase{
 
 		$this->assertSame('test1', $container->test1);
 		$this->assertSame('test2', $container->test2);
-		$this->assertSame('test3', $container->test3);
+		$this->assertNull($container->test3);
 	}
 
 	public function testGet(){
 		$container = new TestContainer;
 
 		$this->assertSame('foo', $container->test1);
-		$this->assertSame('what', $container->test3);
-
 		$this->assertNull($container->test2);
+		$this->assertNull($container->test3);
 		$this->assertNull($container->foo);
 
 		// caution!
@@ -51,14 +50,14 @@ class ContainerTraitTest extends TestCase{
 
 		$this->assertSame('bar', $container->test1);
 		$this->assertSame('what', $container->test2);
-		$this->assertSame('nope', $container->test3);
+		$this->assertNull($container->test3);
 	}
 
 	public function testToArray(){
 		$arr = [
 			'test1' => 'no',
 			'test2' => true,
-			'test3' => 42,
+			'test3' => 'what',
 		];
 
 		$container = new TestContainer($arr);

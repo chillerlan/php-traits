@@ -12,6 +12,8 @@
 
 namespace chillerlan\Traits;
 
+use ReflectionProperty;
+
 /**
  * a generic container with magic getter and setter
  */
@@ -35,7 +37,7 @@ trait Container{
 	 */
 	public function __get(string $property){
 
-		if(property_exists($this, $property)){
+		if(property_exists($this, $property) && !(new ReflectionProperty($this, $property))->isPrivate()){
 			return $this->{$property};
 		}
 
@@ -50,7 +52,7 @@ trait Container{
 	 */
 	public function __set(string $property, $value){
 
-		if(property_exists($this, $property)){
+		if(property_exists($this, $property) && !(new ReflectionProperty($this, $property))->isPrivate()){
 			$this->{$property} = $value;
 		}
 
