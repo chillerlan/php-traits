@@ -22,10 +22,14 @@ trait Container{
 	/**
 	 * @param array $properties
 	 */
-	public function __construct(array $properties = []){
+	public function __construct(array $properties = null){
 
-		foreach($properties as $key => $value){
-			$this->__set($key, $value);
+		if(!empty($properties)){
+
+			foreach($properties as $key => $value){
+				$this->__set($key, $value);
+			}
+
 		}
 
 	}
