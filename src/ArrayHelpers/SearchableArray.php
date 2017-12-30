@@ -1,20 +1,21 @@
 <?php
 /**
- * Trait ArraySearch
+ * Trait SearchableArray
  *
- * @filesource   ArraySearch.php
+ * @filesource   SearchableArray.php.php
  * @created      04.12.2017
- * @package      chillerlan\Traits
+ * @package      chillerlan\Traits\ArrayHelpers
  * @author       Smiley <smiley@chillerlan.net>
  * @copyright    2017 Smiley
  * @license      MIT
  */
 
-namespace chillerlan\Traits;
+namespace chillerlan\Traits\ArrayHelpers;
 
 use ArrayIterator, ArrayObject, RecursiveArrayIterator, RecursiveIteratorIterator, Traversable;
 
-class ArraySearch{
+trait SearchableArray{
+	use DotArray;
 
 	/**
 	 * @var \IteratorIterator|\RecursiveIteratorIterator
@@ -39,6 +40,7 @@ class ArraySearch{
 		elseif($array instanceof Traversable){
 			$this->array = iterator_to_array($array);
 		}
+		// yields unexpected results with DotArray
 		elseif(gettype($array) === 'object'){
 			$this->array = get_object_vars($array);
 		}
@@ -48,7 +50,6 @@ class ArraySearch{
 		else{
 			$this->array = [];
 		}
-
 	}
 
 	/**
@@ -56,7 +57,7 @@ class ArraySearch{
 	 *
 	 * @return mixed
 	 */
-	public function arraySearch(string $dotKey){
+	public function search(string $dotKey){
 		$this->iterator = $this->getRecursiveIteratorIterator();
 
 		foreach($this->iterator as $v){
@@ -75,7 +76,7 @@ class ArraySearch{
 	 *
 	 * @return bool
 	 */
-	public function arrayIsset(string $dotKey):bool{
+	public function isset(string $dotKey):bool{
 		$this->iterator = $this->getRecursiveIteratorIterator();
 
 		foreach($this->iterator as $v){
