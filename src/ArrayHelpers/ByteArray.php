@@ -63,7 +63,7 @@ class ByteArray extends SplFixedArray{
 	 *
 	 * @return string
 	 */
-	private function map(callable $m):string{
+	public function map(callable $m):string{
 		return implode('', array_map($m, $this->toArray()));
 	}
 
@@ -76,9 +76,9 @@ class ByteArray extends SplFixedArray{
 	 * @return \chillerlan\Traits\ArrayHelpers\ByteArray
 	 */
 	public function copyFrom(SplFixedArray $src, int $length = null, int $offset = null, int $srcOffset = null):ByteArray{
-		$length    = $length !== null ? $length : $src->count();
-		$offset    = $offset !== null ? $offset : 0;
-		$srcOffset = $srcOffset !== null ? $srcOffset : 0;
+		$length    = $length ?? $src->count();
+		$offset    = $offset ?? $length;
+		$srcOffset = $srcOffset ?? 0;
 
 		$diff = $offset + $length;
 
@@ -100,6 +100,8 @@ class ByteArray extends SplFixedArray{
 	 * @return \chillerlan\Traits\ArrayHelpers\ByteArray
 	 */
 	public function slice(int $offset, int $length = null):ByteArray{
+
+		// keep an extended class
 		/** @var \chillerlan\Traits\ArrayHelpers\ByteArray $slice */
 		$slice  = (new ReflectionClass($this))->newInstanceArgs([$length ?? $this->count() - $offset]);
 
@@ -118,7 +120,7 @@ class ByteArray extends SplFixedArray{
 	public function equal(SplFixedArray $array):bool{
 
 		if($this->count() !== $array->count()){
-			return false; // @todo: throw Exception?
+			return false;
 		}
 
 		$diff = 0;

@@ -13,11 +13,10 @@
 namespace chillerlan\Traits\ArrayHelpers;
 
 use chillerlan\Traits\TraitException;
-use Exception;
-use SplFixedArray;
-use Traversable;
+use Exception, Traversable;
 
 /**
+ *
  */
 class ByteArrayDispenser{
 
@@ -32,7 +31,7 @@ class ByteArrayDispenser{
 	 * @return bool
 	 */
 	public function isAllowedInt(int $int):bool{
-		return $int > 0 && $int <= PHP_INT_MAX;
+		return $int >= 0 && $int <= PHP_INT_MAX;
 	}
 
 	/**
@@ -57,12 +56,12 @@ class ByteArrayDispenser{
 	 * @return \chillerlan\Traits\ArrayHelpers\ByteArray
 	 * @throws \chillerlan\Traits\TraitException
 	 */
-	public function fromArray($array, $save_indexes = null):ByteArray{ // @todo \Traversable, $target, allow variable arrays, iterators etc
+	public function fromArray($array, $save_indexes = null):ByteArray{
 
 		try{
 			$out = $this->fromIntSize(count($array));
 
-			$array = ($save_indexes !== null ? $save_indexes : true) ? $array : array_values($array);
+			$array = ($save_indexes ?? true) ? $array : array_values($array);
 
 			foreach($array as $k => $v){
 				$out[$k] = $v;
@@ -70,26 +69,30 @@ class ByteArrayDispenser{
 
 			return $out;
 		}
+		// this can be anything
+		// @codeCoverageIgnoreStart
 		catch(Exception $e){
 			throw new TraitException($e->getMessage());
 		}
+		// @codeCoverageIgnoreEnd
 
 	}
 
 	/**
-	 * @param int $start
 	 * @param int $len
+	 *
+	 * @param mixed $fill
 	 *
 	 * @return \chillerlan\Traits\ArrayHelpers\ByteArray
 	 * @throws \chillerlan\Traits\TraitException
 	 */
-	public function fromRange(int $start, int $len):ByteArray{
+	public function fromArrayFill(int $len, $fill = null):ByteArray{
 
-		if(!$this->isAllowedInt($start) || $start < 0){
-			throw new TraitException('invalid start');
+		if(!$this->isAllowedInt($len)){
+			throw new TraitException('invalid length');
 		}
 
-		return $this->fromArray(array_fill($start, $len, 0));
+		return $this->fromArray(array_fill(0, $len, $fill));
 	}
 
 	/**
@@ -197,8 +200,15 @@ class ByteArrayDispenser{
 	 * @param string $bin
 	 *
 	 * @return \chillerlan\Traits\ArrayHelpers\ByteArray
+	 * @throws \chillerlan\Traits\TraitException
 	 */
 	public function fromBin(string $bin):ByteArray{
+		$bin = trim($bin);
+
+		if(!$this->isAllowedBin($bin)){
+			throw new TraitException('invalid binary string');
+		}
+
 		return $this->fromArray(array_map('bindec', str_split($bin, 8)));
 	}
 
@@ -220,10 +230,10 @@ class ByteArrayDispenser{
 
 		if(is_string($data)){
 
-			foreach(['Hex', 'Bin', 'JSON', 'Base64'] as $type){
+			foreach(['Bin', 'Hex', 'JSON', 'Base64'] as $type){
 
-				if($this->{'isAllowed'.$type}($data)){
-					return $this->{'from'.$type}($data);
+				if(call_user_func_array([$this, 'isAllowed'.$type], [$data]) === true){
+					return call_user_func_array([$this, 'from'.$type], [$data]);
 				}
 
 			}
