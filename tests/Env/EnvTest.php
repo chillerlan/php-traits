@@ -52,7 +52,7 @@ class EnvTest extends TestCase{
 
 	public function testAddEnv(){
 		$this->dotenv->addEnv(__DIR__, '.env_test');
-		$this->assertNull($this->dotenv->get('foo'));
+		$this->assertFalse($this->dotenv->get('foo'));
 
 		$this->dotenv->addEnv(__DIR__, '.another_env', true, ['foo']);
 		$this->assertSame('BAR', $this->dotenv->get('foo'));
@@ -66,7 +66,10 @@ class EnvTest extends TestCase{
 		$this->assertSame('test', $_ENV['VAR']);
 		$this->assertSame('test', $this->dotenv->get('var'));
 		$this->assertSame('test', $this->dotenv->get('VAR'));
+		$this->assertSame('test', $this->dotenv->var);
+		$this->assertSame('test', $this->dotenv->VAR);
 		$this->assertSame($_ENV['VAR'], $this->dotenv->get('VAR'));
+		$this->assertSame($_ENV['VAR'], $this->dotenv->VAR);
 
 		$this->assertSame('Oh here\'s some silly &%=ä$&/"§% value', $_ENV['TEST']); // stripped comment line
 		$this->assertSame('foo'.PHP_EOL.'bar'.PHP_EOL.'nope', $_ENV['MULTILINE']);
@@ -81,10 +84,17 @@ class EnvTest extends TestCase{
 		$this->dotenv->unset('TEST');
 		$this->assertFalse(isset($_ENV['TEST']));
 		$this->assertFalse($this->dotenv->get('test'));
+		$this->assertFalse($this->dotenv->test);
 
+		// generic
 		$this->dotenv->set('TESTVAR', 'some value: ${var3}');
 		$this->assertSame('some value: Hello World!', $_ENV['TESTVAR']);
 		$this->assertSame('some value: Hello World!', $this->dotenv->get('TESTVAR'));
+
+		// magic
+		$this->dotenv->TESTVAR = 'some other value: ${var3}';
+		$this->assertSame('some other value: Hello World!', $_ENV['TESTVAR']);
+		$this->assertSame('some other value: Hello World!', $this->dotenv->TESTVAR);
 
 		$this->dotenv->clear();
 

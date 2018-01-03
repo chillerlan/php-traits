@@ -12,8 +12,25 @@
 
 namespace chillerlan\Traits;
 
+/**
+ * @method bool|mixed __get(string $var)
+ * @method bool|mixed get(string $var)
+ * @method void __set(string $var, string $value = null)
+ * @method DotEnv set(string $var, string $value = null)
+ * @method DotEnv unset(string $var)
+ * @method DotEnv clear()
+ */
 class DotEnv{
-	use Env;
+	use Env{
+		// allow a magic getter & setter
+		__getEnv as public __get;
+		__setEnv as public __set;
+		// as well as a generic ones
+		__getEnv as public get;
+		__setEnv as public set;
+		__unsetEnv as public unset;
+		__clearEnv as public clear;
+	}
 
 	/**
 	 * @var string
@@ -30,10 +47,12 @@ class DotEnv{
 	 *
 	 * @param string      $path
 	 * @param string|null $filename
+	 * @param bool|null   $global
 	 */
-	public function __construct(string $path, string $filename = null){
+	public function __construct(string $path, string $filename = null, bool $global = null){
 		$this->path     = $path;
 		$this->filename = $filename;
+		$this->_global  = $global ?? true; // emulate vlucas/dotenv behaviour by default
 	}
 
 	/**
@@ -42,7 +61,7 @@ class DotEnv{
 	 * @return \chillerlan\Traits\DotEnv
 	 */
 	public function load(array $required = null):DotEnv{
-		return $this->__loadEnv($this->path, $this->filename, true, $required);
+		return $this->__loadEnv($this->path, $this->filename, true, $required, $this->_global);
 	}
 
 	/**
@@ -54,42 +73,7 @@ class DotEnv{
 	 * @return \chillerlan\Traits\DotEnv
 	 */
 	public function addEnv(string $path, string $filename = null, bool $overwrite = null, array $required = null):DotEnv{
-		return $this->__loadEnv($path, $filename, $overwrite, $required);
-	}
-
-	/**
-	 * @param string $var
-	 *
-	 * @return bool|mixed
-	 */
-	public function get(string $var){
-		return $this->__getEnv($var);
-	}
-
-	/**
-	 * @param string $var
-	 * @param string $value
-	 *
-	 * @return $this
-	 */
-	public function set(string $var, string $value){
-		return $this->__setEnv($var, $value);
-	}
-
-	/**
-	 * @param string $var
-	 *
-	 * @return \chillerlan\Traits\DotEnv
-	 */
-	public function unset(string $var):DotEnv{
-		return $this->__unsetEnv($var);
-	}
-
-	/**
-	 * @return \chillerlan\Traits\DotEnv
-	 */
-	public function clear():DotEnv{
-		return $this->__clearEnv();
+		return $this->__loadEnv($path, $filename, $overwrite, $required, $this->_global);
 	}
 
 }

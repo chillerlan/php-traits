@@ -28,22 +28,31 @@ trait Env{
 	 *
 	 * @var array
 	 */
-	private $_ENV;
+	private $_ENV = [];
+
+	/**
+	 * Sets the global $_ENV if true. Otherwise all variables are being kept internally
+	 * in $this->_ENV to avoid leaks, making them only accessible via Env::__getEnv().
+	 *
+	 * @var bool
+	 */
+	private $_global;
 
 	/**
 	 * @param string      $path
 	 * @param string|null $filename
 	 * @param bool|null   $overwrite
 	 * @param array|null  $required
+	 * @param bool|null   $global
 	 *
 	 * @return $this
 	 */
-	protected function __loadEnv(string $path, string $filename = null, bool $overwrite = null, array $required = null){
-		$overwrite = $overwrite !== null ? $overwrite : false;
-		$content   = $this->__read(rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.($filename ?? '.env'));
+	protected function __loadEnv(string $path, string $filename = null, bool $overwrite = null, array $required = null, bool $global = null){
+		$this->_global = $global !== null ? $global : false;
+		$content       = $this->__read(rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.($filename ?? '.env'));
 
 		return $this
-			->__load($content, $overwrite)
+			->__load($content, $overwrite !== null ? $overwrite : false)
 			->__check($required)
 		;
 	}
@@ -55,24 +64,25 @@ trait Env{
 	 */
 	protected function __getEnv(string $var){
 		$var = strtoupper($var);
+		$env = null;
 
-		if(array_key_exists($var, $_ENV)){
-			return $_ENV[$var];
-		}
-		elseif(function_exists('getenv')){
-			if($e = getenv($var) !== false){
-				return $e;
-			}
-		}
-		// @codeCoverageIgnoreStart
-		elseif(function_exists('apache_getenv')){
-			if($e = apache_getenv($var) !== false){
-				return $e;
-			}
-		}
-		// @codeCoverageIgnoreEnd
+		if($this->_global === true){
 
-		return $this->_ENV[$var] ?? false;
+			if(array_key_exists($var, $_ENV)){
+				$env = $_ENV[$var];
+			}
+			elseif(function_exists('getenv')){
+				$env = getenv($var);
+			}
+			// @codeCoverageIgnoreStart
+			elseif(function_exists('apache_getenv')){
+				$env = apache_getenv($var);
+			}
+			// @codeCoverageIgnoreEnd
+
+		}
+
+		return $env ?? $this->_ENV[$var] ?? false;
 	}
 
 	/**
@@ -85,18 +95,21 @@ trait Env{
 		$var   = strtoupper($var);
 		$value = $this->__parse($value);
 
-		putenv($var.'='.$value);
+		if($this->_global === true){
+			putenv($var.'='.$value);
 
-		// fill $_ENV explicitly, assuming variables_order="GPCS" (production)
-		$_ENV[$var] = $value;
+			// fill $_ENV explicitly, assuming variables_order="GPCS" (production)
+			$_ENV[$var] = $value;
+
+			// @codeCoverageIgnoreStart
+			if(function_exists('apache_setenv')){
+				apache_setenv($var, $value);
+			}
+			// @codeCoverageIgnoreEnd
+		}
+
 		// a backup
 		$this->_ENV[$var] = $value;
-
-		// @codeCoverageIgnoreStart
-		if(function_exists('apache_setenv')){
-			apache_setenv($var, $value);
-		}
-		// @codeCoverageIgnoreEnd
 
 		return $this;
 	}
@@ -109,9 +122,12 @@ trait Env{
 	protected function __unsetEnv(string $var){
 		$var = strtoupper($var);
 
-		unset($_ENV[$var]);
+		if($this->_global === true){
+			unset($_ENV[$var]);
+			putenv($var);
+		}
+
 		unset($this->_ENV[$var]);
-		putenv($var);
 
 		return $this;
 	}
@@ -122,7 +138,11 @@ trait Env{
 	 * @return $this
 	 */
 	protected function __clearEnv(){
-		$_ENV       = [];
+
+		if($this->_global === true){
+			$_ENV = [];
+		}
+
 		$this->_ENV = [];
 
 		return $this;
@@ -203,8 +223,8 @@ trait Env{
 
 			// handle nested ${VARS}
 			if(strpos($value, '$') !== false){
-				$value = preg_replace_callback('/\${([_a-z\d]+)}/i', function($matches){
-					return $this->__getEnv($matches[1]);
+				$value = preg_replace_callback('/\${(?<var>[_a-z\d]+)}/i', function($matches){
+					return $this->__getEnv($matches['var']);
 				}, $value);
 			}
 
