@@ -17,7 +17,10 @@ namespace chillerlan\Traits;
  * @method bool|mixed get(string $var)
  * @method void __set(string $var, string $value = null)
  * @method DotEnv set(string $var, string $value = null)
- * @method DotEnv unset(string $var)
+ * @method bool __isset(string $var)
+ * @method void __unset(string $var)
+ * @method bool isset(string $var)
+ * @method void unset(string $var)
  * @method DotEnv clear()
  */
 class DotEnv{
@@ -28,6 +31,11 @@ class DotEnv{
 		// as well as a generic ones
 		__getEnv as public get;
 		__setEnv as public set;
+		// magic isset & unset
+		__issetEnv as public __isset;
+		__unsetEnv as public __unset;
+		// generic isset, unset & clear
+		__issetEnv as public isset;
 		__unsetEnv as public unset;
 		__clearEnv as public clear;
 	}

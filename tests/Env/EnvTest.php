@@ -63,6 +63,9 @@ class EnvTest extends TestCase{
 
 		$this->assertFalse(isset($_ENV[42])); // numerical keys shouldn't exist in globals
 
+		$this->assertNotEmpty($_ENV); // we're in global mode
+		$this->asserttrue(isset($_ENV['VAR']));
+
 		$this->assertSame('test', $_ENV['VAR']);
 		$this->assertSame('test', $this->dotenv->get('var'));
 		$this->assertSame('test', $this->dotenv->get('VAR'));
@@ -81,7 +84,9 @@ class EnvTest extends TestCase{
 	public function testSetUnsetClear(){
 		$this->dotenv->load();
 
-		$this->dotenv->unset('TEST');
+		$this->assertTrue(isset($_ENV['TEST']));
+		$this->assertTrue(isset($this->dotenv->TEST));
+		unset($this->dotenv->TEST);
 		$this->assertFalse(isset($_ENV['TEST']));
 		$this->assertFalse($this->dotenv->get('test'));
 		$this->assertFalse($this->dotenv->test);

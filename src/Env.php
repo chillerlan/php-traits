@@ -117,6 +117,21 @@ trait Env{
 	/**
 	 * @param string $var
 	 *
+	 * @return bool
+	 */
+	public function __issetEnv(string $var):bool {
+		return
+			($this->_global && (
+				isset($_ENV[$var])
+				|| getenv($var)
+				|| (function_exists('apache_getenv') && apache_getenv($var))
+			))
+			|| array_key_exists($var, $this->_ENV);
+	}
+
+	/**
+	 * @param string $var
+	 *
 	 * @return $this
 	 */
 	protected function __unsetEnv(string $var){

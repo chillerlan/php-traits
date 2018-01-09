@@ -42,7 +42,9 @@ class EnvTestNonGlobal extends EnvTest{
 	public function testSetUnsetClear(){
 		$this->dotenv->load();
 
-		$this->dotenv->unset('TEST');
+		$this->assertFalse(isset($_ENV['TEST']));
+		$this->assertTrue($this->dotenv->isset('TEST'));
+		unset($this->dotenv->TEST);
 		$this->assertFalse(isset($_ENV['TEST']));
 		$this->assertFalse($this->dotenv->get('test'));
 
