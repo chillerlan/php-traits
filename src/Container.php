@@ -20,9 +20,16 @@ use ReflectionProperty;
 trait Container{
 
 	/**
-	 * @param array $properties
+	 * @var \chillerlan\Traits\DotEnv|null
 	 */
-	public function __construct(array $properties = null){
+	private $env;
+
+	/**
+	 * @param array                          $properties
+	 * @param \chillerlan\Traits\DotEnv|null $env
+	 */
+	public function __construct(array $properties = null, DotEnv $env = null){
+		$this->env = $env;
 
 		if(!empty($properties)){
 
@@ -41,8 +48,11 @@ trait Container{
 	 */
 	public function __get(string $property){
 
-		if(property_exists($this, $property) && !(new ReflectionProperty($this, $property))->isPrivate()){
+		if($this->__isset($property)){
 			return $this->{$property};
+		}
+		elseif($this->env instanceof DotEnv){
+			return $this->env->get($property);
 		}
 
 		return null;
@@ -56,20 +66,68 @@ trait Container{
 	 */
 	public function __set(string $property, $value){
 
-		if(property_exists($this, $property) && !(new ReflectionProperty($this, $property))->isPrivate()){
+		// avoid overwriting private properties
+		if(!property_exists($this, $property) || !$this->__isPrivate($property)){
 			$this->{$property} = $value;
+		}
+		elseif($this->env instanceof DotEnv){
+			$this->env->set($property, $value);
 		}
 
 	}
 
 	/**
+	 * @param string $property
+	 *
+	 * @return bool
+	 */
+	public function __isset(string $property):bool{
+		return (property_exists($this, $property) && !$this->__isPrivate($property)) || ($this->env instanceof DotEnv && $this->env->get($property));
+	}
+
+	/**
+	 * @param string $property
+	 *
+	 * @return bool
+	 */
+	protected function __isPrivate(string $property):bool{
+		return (new ReflectionProperty($this, $property))->isPrivate();
+	}
+
+	/**
+	 * @param string $property
+	 *
+	 * @return void
+	 */
+	public function __unset(string $property){
+
+		// avoid unsetting private properties
+		if($this->__isPrivate($property)){
+			unset($this->{$property});
+		}
+
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString():string{
+		return json_encode($this->__toArray());
+	}
+
+	/**
 	 * @return array
 	 */
-	public function __toArray():array {
+	public function __toArray():array{
 		$data = [];
 
-		foreach($this as $key => $value){
-			$data[$key] = $value;
+		foreach($this as $property => $value){
+
+			// exclude private properties
+			if($this->__isset($property)){
+				$data[$property] = $value;
+			}
+
 		}
 
 		return $data;

@@ -36,9 +36,9 @@ class ContainerTraitTest extends TestCase{
 		$this->assertNull($container->test3);
 		$this->assertNull($container->foo);
 
-		// caution!
-		$this->assertFalse(isset($container->test1));
-		$this->assertFalse(isset($container->test2));
+		// isset test
+		$this->assertTrue(isset($container->test1));
+		$this->assertTrue(isset($container->test2));
 		$this->assertFalse(isset($container->test3));
 	}
 
@@ -54,10 +54,10 @@ class ContainerTraitTest extends TestCase{
 	}
 
 	public function testToArray(){
+
 		$arr = [
 			'test1' => 'no',
 			'test2' => true,
-			'test3' => 'what',
 		];
 
 		$container = new TestContainer($arr);
