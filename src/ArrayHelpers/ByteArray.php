@@ -103,7 +103,7 @@ class ByteArray extends SplFixedArray{
 
 		// keep an extended class
 		/** @var \chillerlan\Traits\ArrayHelpers\ByteArray $slice */
-		$slice  = (new ReflectionClass($this))->newInstanceArgs([$length ?? $this->count() - $offset]);
+		$slice  = (new ReflectionClass($this))->newInstanceArgs([$length ?? ($this->count() - $offset)]);
 
 		foreach($slice as $i => $_){
 			$slice[$i] = $this[$offset + $i];
