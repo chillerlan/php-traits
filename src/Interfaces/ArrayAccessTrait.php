@@ -51,13 +51,9 @@ trait ArrayAccessTrait{
 	 */
 	public function offsetSet($offset, $value){
 
-		if(is_null($offset)){
-			$this->array[] = $value;
-		}
-		else{
-			$this->array[$offset] = $value;
-		}
-
+		$offset !== null
+			? $this->array[$offset] = $value
+			: $this->array[] = $value;
 	}
 
 	/**
