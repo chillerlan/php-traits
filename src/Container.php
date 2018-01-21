@@ -134,7 +134,7 @@ trait Container{
 	 *
 	 * @return $this
 	 */
-	public function __fromIterable(iterable $properties){
+	public function __fromIterable(array $properties){
 
 		foreach($properties as $key => $value){
 			$this->__set($key, $value);

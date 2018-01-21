@@ -60,7 +60,22 @@ interface ContainerInterface{
 	public function __toArray():array;
 
 	/**
+	 * @param iterable $properties
+	 *
+	 * @return \chillerlan\Traits\ContainerInterface
+	 */
+	public function __fromIterable(array $properties);
+
+	/**
 	 * @return string
 	 */
 	public function __toJSON():string;
+
+	/**
+	 * @param string $json
+	 *
+	 * @return \chillerlan\Traits\ContainerInterface
+	 */
+	public function __fromJSON(string $json);
+
 }
