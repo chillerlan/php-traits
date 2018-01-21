@@ -54,7 +54,7 @@ class EnvTest extends TestCase{
 		$this->dotenv->addEnv(__DIR__, '.env_test');
 		$this->assertFalse($this->dotenv->get('foo'));
 
-		$this->dotenv->addEnv(__DIR__, '.another_env', true, ['foo']);
+		$this->dotenv->addEnv(__DIR__, '.another_env', true, ['FOO']); // case sensitive here!
 		$this->assertSame('BAR', $this->dotenv->get('foo'));
 	}
 

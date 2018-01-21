@@ -48,11 +48,11 @@ trait Env{
 	 * @return $this
 	 */
 	protected function __loadEnv(string $path, string $filename = null, bool $overwrite = null, array $required = null, bool $global = null){
-		$this->_global = $global !== null ? $global : false;
+		$this->_global = $global ?? false;
 		$content       = $this->__read(rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.($filename ?? '.env'));
 
 		return $this
-			->__load($content, $overwrite !== null ? $overwrite : false)
+			->__load($content, $overwrite ?? false)
 			->__check($required)
 		;
 	}
@@ -249,7 +249,7 @@ trait Env{
 	}
 
 	/**
-	 * @param array|null $required
+	 * @param string[]|null $required - case sensitive!
 	 *
 	 * @return $this
 	 * @throws \chillerlan\Traits\TraitException
@@ -261,7 +261,7 @@ trait Env{
 		}
 
 		foreach($required as $var){
-			if($this->__getEnv($var) === false || $this->__getEnv($var) === null){
+			if(!$this->__issetEnv($var)){
 				throw new TraitException('required variable not set: '.strtoupper($var));
 			}
 		}
