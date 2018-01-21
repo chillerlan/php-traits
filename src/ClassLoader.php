@@ -28,39 +28,45 @@ trait ClassLoader{
 	 * @throws \Exception
 	 */
 	public function loadClass(string $class, string $type = null, ...$params){
-		$type = $type === null ? $class : $type;
+		$type = $type ?? $class;
 
 		try{
 			$reflectionClass = new ReflectionClass($class);
 			$reflectionType  = new ReflectionClass($type);
+		}
+		catch(Exception $e){
+			throw new TraitException('ClassLoader: '.$e->getMessage());
+		}
 
-			if($reflectionType->isTrait()){
-				trigger_error($class.' cannot be an instance of trait '.$type);
+
+		if($reflectionType->isTrait()){
+			throw new TraitException($class.' cannot be an instance of trait '.$type);
+		}
+
+		if($reflectionClass->isAbstract()){
+			throw new TraitException('cannot instance abstract class '.$class);
+		}
+
+		if($reflectionClass->isTrait()){
+			throw new TraitException('cannot instance trait '.$class);
+		}
+
+		if($class !== $type){
+
+			if($reflectionType->isInterface() && !$reflectionClass->implementsInterface($type)){
+				throw new TraitException($class.' does not implement '.$type);
+			}
+			elseif(!$reflectionClass->isSubclassOf($type)) {
+				throw new TraitException($class.' does not inherit '.$type);
 			}
 
-			if($reflectionClass->isAbstract()){
-				trigger_error('cannot instance abstract class '.$class);
-			}
+		}
 
-			if($reflectionClass->isTrait()){
-				trigger_error('cannot instance trait '.$class);
-			}
-
-			if($class !== $type){
-
-				if($reflectionType->isInterface() && !$reflectionClass->implementsInterface($type)){
-					trigger_error($class.' does not implement '.$type);
-				}
-				elseif(!$reflectionClass->isSubclassOf($type)) {
-					trigger_error($class.' does not inherit '.$type);
-				}
-
-			}
-
+		try{
 			$object = $reflectionClass->newInstanceArgs($params);
 
 			if(!$object instanceof $type){
-				trigger_error('how did u even get here?'); // @codeCoverageIgnore
+				throw new TraitException('how did u even get here?'); // @codeCoverageIgnore
 			}
 
 			return $object;
