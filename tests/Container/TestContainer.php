@@ -13,13 +13,14 @@
 namespace chillerlan\TraitTest\Container;
 
 use chillerlan\Traits\Container;
+use chillerlan\Traits\ContainerInterface;
 
 /**
  * @property $test1
  * @property $test2
  * @property $test3
  */
-class TestContainer{
+class TestContainer implements ContainerInterface{
 	use Container;
 
 	protected $test1 = 'foo';

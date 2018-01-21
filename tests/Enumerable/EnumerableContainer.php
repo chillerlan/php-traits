@@ -13,8 +13,9 @@
 namespace chillerlan\TraitTest\Enumerable;
 
 use chillerlan\Traits\Enumerable;
+use chillerlan\Traits\EnumerableInterface;
 
-class EnumerableContainer{
+class EnumerableContainer implements EnumerableInterface{
 	use Enumerable;
 
 	public function __construct(array $data){
