@@ -18,7 +18,7 @@ interface ContainerInterface{
 	/**
 	 * @param iterable $properties
 	 */
-	public function __construct(iterable $properties = null);
+	public function __construct(array $properties = null);
 
 	/**
 	 * @param string $property

@@ -28,7 +28,7 @@ trait Container{
 	 * @param iterable                       $properties
 	 * @param \chillerlan\Traits\DotEnv|null $env
 	 */
-	public function __construct(iterable $properties = null, DotEnv $env = null){
+	public function __construct(array $properties = null, DotEnv $env = null){
 		$this->env = $env;
 
 		if(!empty($properties)){
