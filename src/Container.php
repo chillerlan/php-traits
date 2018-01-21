@@ -25,18 +25,14 @@ trait Container{
 	private $env;
 
 	/**
-	 * @param array                          $properties
+	 * @param iterable                       $properties
 	 * @param \chillerlan\Traits\DotEnv|null $env
 	 */
-	public function __construct(array $properties = null, DotEnv $env = null){
+	public function __construct(iterable $properties = null, DotEnv $env = null){
 		$this->env = $env;
 
 		if(!empty($properties)){
-
-			foreach($properties as $key => $value){
-				$this->__set($key, $value);
-			}
-
+			$this->__fromIterable($properties);
 		}
 
 	}
@@ -67,7 +63,7 @@ trait Container{
 	public function __set(string $property, $value){
 
 		// avoid overwriting private properties
-		if(!property_exists($this, $property) || !$this->__isPrivate($property)){
+		if(property_exists($this, $property) && !$this->__isPrivate($property)){
 			$this->{$property} = $value;
 		}
 		elseif($this->env instanceof DotEnv){
@@ -102,7 +98,7 @@ trait Container{
 	public function __unset(string $property){
 
 		// avoid unsetting private properties
-		if($this->__isPrivate($property)){
+		if($this->__isset($property)){
 			unset($this->{$property});
 		}
 
@@ -112,7 +108,7 @@ trait Container{
 	 * @return string
 	 */
 	public function __toString():string{
-		return json_encode($this->__toArray());
+		return $this->__toJSON();
 	}
 
 	/**
@@ -131,6 +127,36 @@ trait Container{
 		}
 
 		return $data;
+	}
+
+	/**
+	 * @param iterable $properties
+	 *
+	 * @return $this
+	 */
+	public function __fromIterable(iterable $properties){
+
+		foreach($properties as $key => $value){
+			$this->__set($key, $value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toJSON():string{
+		return json_encode($this->__toArray());
+	}
+
+	/**
+	 * @param string $json
+	 *
+	 * @return $this
+	 */
+	public function __fromJSON(string $json){
+		return $this->__fromIterable(json_decode($json, true));
 	}
 
 }

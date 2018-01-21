@@ -16,9 +16,9 @@ namespace chillerlan\Traits;
 interface ContainerInterface{
 
 	/**
-	 * @param array $properties
+	 * @param iterable $properties
 	 */
-	public function __construct(array $properties = null);
+	public function __construct(iterable $properties = null);
 
 	/**
 	 * @param string $property
@@ -36,7 +36,31 @@ interface ContainerInterface{
 	public function __set(string $property, $value);
 
 	/**
+	 * @param string $property
+	 *
+	 * @return bool
+	 */
+	public function __isset(string $property):bool;
+
+	/**
+	 * @param string $property
+	 *
+	 * @return mixed
+	 */
+	public function __unset(string $property);
+
+	/**
+	 * @return string
+	 */
+	public function __toString():string;
+
+	/**
 	 * @return array
 	 */
 	public function __toArray():array;
+
+	/**
+	 * @return string
+	 */
+	public function __toJSON():string;
 }
