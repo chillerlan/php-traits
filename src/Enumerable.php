@@ -12,8 +12,6 @@
 
 namespace chillerlan\Traits;
 
-use Closure;
-
 /**
  * @link http://api.prototypejs.org/language/Enumerable/
  */
@@ -117,12 +115,12 @@ trait Enumerable{
 	/**
 	 * @link http://api.prototypejs.org/language/Enumerable/prototype/findAll/
 	 *
-	 * @param \Closure $callback
+	 * @param callable $callback
 	 *
 	 * @return array
 	 * @throws \chillerlan\Traits\TraitException
 	 */
-	public function __findAll(Closure $callback):array{
+	public function __findAll(callable $callback):array{
 
 		if(!is_callable($callback)){
 			throw new TraitException('invalid callback');
@@ -144,12 +142,12 @@ trait Enumerable{
 	/**
 	 * @link http://api.prototypejs.org/language/Enumerable/prototype/reject/
 	 *
-	 * @param \Closure $callback
+	 * @param callable $callback
 	 *
 	 * @return array
 	 * @throws \chillerlan\Traits\TraitException
 	 */
-	public function __reject(Closure $callback):array{
+	public function __reject(callable $callback):array{
 
 		if(!is_callable($callback)){
 			throw new TraitException('invalid callback');
