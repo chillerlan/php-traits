@@ -119,7 +119,7 @@ trait Env{
 	 *
 	 * @return bool
 	 */
-	public function __issetEnv(string $var):bool {
+	protected function __issetEnv(string $var):bool {
 		return
 			($this->_global && (
 				isset($_ENV[$var])
