@@ -12,8 +12,6 @@
 
 namespace chillerlan\Traits;
 
-use Closure;
-
 interface EnumerableInterface{
 
 	/**
@@ -33,7 +31,7 @@ interface EnumerableInterface{
 	 *
 	 * @return array
 	 */
-	public function __map(callable $callback):array;
+	public function __map($callback):array;
 
 	/**
 	 * @return mixed

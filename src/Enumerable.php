@@ -45,7 +45,7 @@ trait Enumerable{
 	 *
 	 * @return $this
 	 */
-	public function __each($callback){
+	public function __each(callable $callback){
 		$this->__map($callback);
 
 		return $this;
