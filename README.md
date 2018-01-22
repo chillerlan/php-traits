@@ -1,33 +1,51 @@
 # php-traits
 
 A collection of (more or less) useful traits for PHP7+
-
-- `ClassLoader` - invokes objects of a given class and interface/type with an arbitrary count of constructor arguments
-- `Container` - provides a magic getter & setter as well as a `__toArray()` method
-- `Magic` - turns methods into magic properties
-- `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/)
-- `Env` - loads contents from a `.env` file into the environment (similar to [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv))
-
+  
 [![version][packagist-badge]][packagist]
 [![license][license-badge]][license]
 [![Travis][travis-badge]][travis]
 [![Coverage][coverage-badge]][coverage]
 [![Scrunitizer][scrutinizer-badge]][scrutinizer]
-[![Code Climate][codeclimate-badge]][codeclimate]
+[![Packagist downloads][downloads-badge]][downloads]
+[![PayPal donate][donate-badge]][donate]
 
-[packagist-badge]: https://img.shields.io/packagist/v/chillerlan/php-traits.svg
+
+[packagist-badge]: https://img.shields.io/packagist/v/chillerlan/php-traits.svg?style=flat-square
 [packagist]: https://packagist.org/packages/chillerlan/php-traits
-[license-badge]: https://img.shields.io/packagist/l/chillerlan/php-traits.svg
+[license-badge]: https://img.shields.io/github/license/codemasher/php-traits.svg?style=flat-square
 [license]: https://github.com/codemasher/php-traits/blob/master/LICENSE
-[travis-badge]: https://img.shields.io/travis/codemasher/php-traits.svg
+[travis-badge]: https://img.shields.io/travis/codemasher/php-traits.svg?style=flat-square
 [travis]: https://travis-ci.org/codemasher/php-traits
-[coverage-badge]: https://img.shields.io/codecov/c/github/codemasher/php-traits.svg
+[coverage-badge]: https://img.shields.io/codecov/c/github/codemasher/php-traits.svg?style=flat-square
 [coverage]: https://codecov.io/github/codemasher/php-traits
-[scrutinizer-badge]: https://img.shields.io/scrutinizer/g/codemasher/php-traits.svg
+[scrutinizer-badge]: https://img.shields.io/scrutinizer/g/codemasher/php-traits.svg?style=flat-square
 [scrutinizer]: https://scrutinizer-ci.com/g/codemasher/php-traits
-[codeclimate-badge]: https://img.shields.io/codeclimate/github/codemasher/php-traits.svg
-[codeclimate]: https://codeclimate.com/github/codemasher/php-traits
+[downloads-badge]: https://img.shields.io/packagist/dt/chillerlan/php-traits.svg?style=flat-square
+[downloads]: https://packagist.org/packages/chillerlan/php-traits/stats
+[donate-badge]: https://img.shields.io/badge/donate-paypal-ff33aa.svg?style=flat-square
+[donate]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WLYUNAT9ZTJZ4
 
+## Features
+- `ClassLoader` - invokes objects of a given class and interface/type with an arbitrary count of constructor arguments
+- `Container` - provides a magic getter & setter and some fancy, implements `ContainerInterface`
+- `Magic` - turns methods into magic properties
+- `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/), implements `EnumerableInterface`
+- `Env` - loads contents from a `.env` file into the environment (similar to [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv))
+  - `DotEnv` - a standalone `Env` class
+- `ArrayHelpers`
+  - `ByteArray` - useful for byte/bit-flipping purposes, extends [`SplFixedArray`](http://php.net/manual/class.splfixedarray.php)
+  - `ByteArrayDispenser` - creates `ByteArray` from several data types (hex, base64, binary, json etc.)
+  - `DotArray` - adds dot key notation functionality
+  - `SearchableArray` - deep search arrays using [`RecursiveIteratorIterator`](http://php.net/manual/class.recursiveiteratoriterator.php)
+- `Interfaces`
+  - `ArrayAccessTrait` - implements [`ArrayAccess`](http://php.net/manual/class.arrayaccess.php)
+  - `IteratorTrait` - implements [`Iterator`](http://php.net/manual/class.iterator.php)
+  - `SerializableTrait` - implements [`Serializable`](http://php.net/manual/class.serializable.php)
+- `SPL`
+  - `CountableTrait` - implements [`Countable`](http://php.net/manual/class.countable.php)
+  - `SeekableIteratorTrait` - implements [`SeekableIterator`](http://php.net/manual/class.seekableiterator.php)
+ 
 ## Documentation
 
 ### Installation
@@ -67,7 +85,7 @@ class MyClass{
 }
 ```
 
-Let's assume you have several classes that implement the same interface, but their constructors have different parameter counts, like so:
+Let's assume we have several classes that implement the same interface, but their constructors have different parameter counts, like so:
 ```php
 class SomeClass implements MyInterface{
 	public funtion __construct($param_foo){}
@@ -104,7 +122,7 @@ class MyClass{
 
 #### `Container`
 ```php
-class MyContainer{
+class MyContainer implements ContainerInterface{
 	use Container;
 
 	protected $foo;
@@ -120,9 +138,14 @@ $container->bar = 'foo';
 
 // which is equivalent to 
 $container = new MyContainer(['bar' => 'foo', 'foo' => 'what']);
+// ...or try
+$container->__fromJSON('{"foo": "what", "bar": "foo"}');
+
 
 // fetch all properties as array
 $container->__toArray(); // -> ['foo' => 'what', 'bar' => 'foo']
+// or JSON
+$container->__toJSON(); // -> {"foo": "what", "bar": "foo"}
 
 //non-existing properties will be ignored:
 $container->nope = 'what';
@@ -132,7 +155,7 @@ var_dump($container->nope); // -> null
 
 
 #### `Magic`
-`Magic` works basically the same way as `Container`, except it accesses internal methods instead of properties.
+`Magic` allows to access internal methods like as properties.
 ```php
 class MyMagicContainer{
 	use Magic;
@@ -165,7 +188,7 @@ var_dump($magic->foo); // -> foo: foobar
 
 #### `Enumerable`
 ```php
-class MyEnumerableContainer{
+class MyEnumerableContainer implements EnumerableInterface{
 	use Enumerable;
 
 	public function __construct(array $data){
@@ -213,10 +236,10 @@ class MyClass{
 	
 	public function __construct(){
 		// load and overwrite existing vars, require var "WHAT"
-		$this->__loadEnv(__DIR__.'/../config', '.env', ['what']);
+		$this->__loadEnv(__DIR__.'/../config', '.env', ['WHAT']);
 		
 		// will not overwrite
-		$this->__addEnv(__DIR__.'/../config', '.env', false, ['what']); 
+		$this->__addEnv(__DIR__.'/../config', '.env', false, ['WHAT']); 
 		
 		$this->foo = $_ENV['WHAT']; // -> foo-bar
 		// or
