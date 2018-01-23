@@ -1,4 +1,4 @@
-# php-traits
+# chillerlan/php-traits
 
 A collection of (more or less) useful traits for PHP7+
   
@@ -10,17 +10,16 @@ A collection of (more or less) useful traits for PHP7+
 [![Packagist downloads][downloads-badge]][downloads]
 [![PayPal donate][donate-badge]][donate]
 
-
 [packagist-badge]: https://img.shields.io/packagist/v/chillerlan/php-traits.svg?style=flat-square
 [packagist]: https://packagist.org/packages/chillerlan/php-traits
-[license-badge]: https://img.shields.io/github/license/codemasher/php-traits.svg?style=flat-square
-[license]: https://github.com/codemasher/php-traits/blob/master/LICENSE
-[travis-badge]: https://img.shields.io/travis/codemasher/php-traits.svg?style=flat-square
-[travis]: https://travis-ci.org/codemasher/php-traits
-[coverage-badge]: https://img.shields.io/codecov/c/github/codemasher/php-traits.svg?style=flat-square
-[coverage]: https://codecov.io/github/codemasher/php-traits
-[scrutinizer-badge]: https://img.shields.io/scrutinizer/g/codemasher/php-traits.svg?style=flat-square
-[scrutinizer]: https://scrutinizer-ci.com/g/codemasher/php-traits
+[license-badge]: https://img.shields.io/github/license/chillerlan/php-traits.svg?style=flat-square
+[license]: https://github.com/chillerlan/php-traits/blob/master/LICENSE
+[travis-badge]: https://img.shields.io/travis/chillerlan/php-traits.svg?style=flat-square
+[travis]: https://travis-ci.org/chillerlan/php-traits
+[coverage-badge]: https://img.shields.io/codecov/c/github/chillerlan/php-traits.svg?style=flat-square
+[coverage]: https://codecov.io/github/chillerlan/php-traits
+[scrutinizer-badge]: https://img.shields.io/scrutinizer/g/chillerlan/php-traits.svg?style=flat-square
+[scrutinizer]: https://scrutinizer-ci.com/g/chillerlan/php-traits
 [downloads-badge]: https://img.shields.io/packagist/dt/chillerlan/php-traits.svg?style=flat-square
 [downloads]: https://packagist.org/packages/chillerlan/php-traits/stats
 [donate-badge]: https://img.shields.io/badge/donate-paypal-ff33aa.svg?style=flat-square
@@ -62,8 +61,8 @@ A collection of (more or less) useful traits for PHP7+
 ```
 
 #### Manual installation
-Download the desired version of the package from [master](https://github.com/codemasher/php-traits/archive/master.zip) or 
-[release](https://github.com/codemasher/php-traits/releases) and extract the contents to your project folder.  After that:
+Download the desired version of the package from [master](https://github.com/chillerlan/php-traits/archive/master.zip) or 
+[release](https://github.com/chillerlan/php-traits/releases) and extract the contents to your project folder.  After that:
 - run `composer install` to install the required dependencies and generate `/vendor/autoload.php`.
 - if you use a custom autoloader, point the namespace `chillerlan\Traits` to the folder `src` of the package 
 
