@@ -1,23 +1,29 @@
 {
 	"name": "chillerlan/php-traits",
 	"description": "Some useful traits for PHP 7+",
-	"homepage": "https://github.com/codemasher/php-traits",
+	"homepage": "https://github.com/chillerlan/php-traits",
 	"license": "MIT",
 	"type": "library",
+	"minimum-stability": "stable",
 	"keywords": [
-		"trait", "php7"
+		"trait", "php7", "helper", "dotenv", "container"
 	],
 	"authors": [
 		{
 			"name": "Smiley",
-			"email": "smiley@chillerlan.net"
+			"email": "smiley@chillerlan.net",
+			"homepage": "https://github.com/codemasher"
 		}
 	],
+	"support": {
+		"issues": "https://github.com/chillerlan/php-traits/issues",
+		"source": "https://github.com/chillerlan/php-traits"
+	},
 	"require": {
 		"php": ">=7.0.3"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "6.5.*"
+		"phpunit/phpunit": "^6.5"
 	},
 	"autoload": {
 		"psr-4": {
