@@ -12,6 +12,6 @@
 
 namespace chillerlan\Traits;
 
-abstract class ContainerAbstract{
+abstract class ContainerAbstract implements ContainerInterface{
 	use Container;
 }
