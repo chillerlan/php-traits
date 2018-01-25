@@ -14,6 +14,12 @@ namespace chillerlan\Traits\Crypto;
 
 class SecretBox extends CryptoBox{
 
+	/**
+	 * @param string      $message
+	 * @param string|null $nonce_bin
+	 *
+	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
+	 */
 	public function create(string $message, string $nonce_bin = null):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_BOX_SECRETKEYBYTES);
 
@@ -30,13 +36,20 @@ class SecretBox extends CryptoBox{
 		return $this;
 	}
 
+	/**
+	 * @param string $box_bin
+	 * @param string $nonce_bin
+	 *
+	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
+	 * @throws \chillerlan\Traits\Crypto\CryptoException
+	 */
 	public function open(string $box_bin, string $nonce_bin):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_BOX_SECRETKEYBYTES);
 
 		$this->message = sodium_crypto_secretbox_open($box_bin, $nonce_bin, $this->keypair->secret);
 
 		if($this->message === false){
-			throw new CryptoException('invalid box');
+			throw new CryptoException('invalid box'); // @codeCoverageIgnore
 		}
 
 		return $this;

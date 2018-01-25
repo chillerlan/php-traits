@@ -41,6 +41,13 @@ class Box extends CryptoBox{
 		return $this;
 	}
 
+	/**
+	 * @param string $box_bin
+	 * @param string $nonce_bin
+	 *
+	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
+	 * @throws \chillerlan\Traits\Crypto\CryptoException
+	 */
 	public function open(string $box_bin, string $nonce_bin):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_BOX_SECRETKEYBYTES, SODIUM_CRYPTO_BOX_PUBLICKEYBYTES);
 
@@ -53,7 +60,7 @@ class Box extends CryptoBox{
 		sodium_memzero($nonce_bin);
 
 		if($this->message === false){
-			throw new CryptoException('invalid box');
+			throw new CryptoException('invalid box'); // @codeCoverageIgnore
 		}
 
 		return $this;

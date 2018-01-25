@@ -85,10 +85,16 @@ abstract class CryptoBox implements CryptoBoxInterface, ContainerInterface{
 
 	}
 
+	/**
+	 * @param string $message
+	 *
+	 * @return string
+	 * @throws \chillerlan\Traits\Crypto\CryptoException
+	 */
 	protected function checkMessage(string $message):string {
 		$message = trim($message);
 
-		if(strlen($message) < 1){
+		if(empty($message)){
 			throw new CryptoException('invalid message');
 		}
 

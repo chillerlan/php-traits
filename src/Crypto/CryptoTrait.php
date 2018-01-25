@@ -15,6 +15,11 @@ namespace chillerlan\Traits\Crypto;
 trait CryptoTrait{
 
 	/**
+	 * @var \chillerlan\Traits\Crypto\CryptoKeyInterface
+	 */
+	protected $cryptoKeyInterface;
+
+	/**
 	 * @param string $seed_bin
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoKeyInterface
@@ -43,97 +48,78 @@ trait CryptoTrait{
 
 	/**
 	 * @param string      $message
-	 * @param string      $secret
-	 * @param string      $public
 	 * @param string|null $nonce
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function createBox(string $message, string $secret, string $public, string $nonce = null):CryptoBoxInterface{
-		return (new Box(['keypair' => new BoxKeypair(['secret' => $secret, 'public' => $public])]))
-			->create($message, $nonce);
+	protected function createBox(string $message, string $nonce = null):CryptoBoxInterface{
+		return (new Box(['keypair' => $this->cryptoKeyInterface]))->create($message, $nonce);
 	}
 
 	/**
 	 * @param string $box
-	 * @param string $secret
-	 * @param string $public
 	 * @param string $nonce
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function openBox(string $box, string $secret, string $public, string $nonce):CryptoBoxInterface{
-		return (new Box(['keypair' => new BoxKeypair(['secret' => $secret, 'public' => $public])]))
-			->open($box, $nonce);
+	protected function openBox(string $box, string $nonce):CryptoBoxInterface{
+		return (new Box(['keypair' => $this->cryptoKeyInterface]))->open($box, $nonce);
 	}
 
 	/**
 	 * @param string      $message
-	 * @param string      $secret
 	 * @param string|null $nonce
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function createSecretBox(string $message, string $secret, string $nonce = null):CryptoBoxInterface{
-		return (new SecretBox(['keypair' => new BoxKeypair(['secret' => $secret])]))
-			->create($message, $nonce);
+	protected function createSecretBox(string $message, string $nonce = null):CryptoBoxInterface{
+		return (new SecretBox(['keypair' => $this->cryptoKeyInterface]))->create($message, $nonce);
 	}
 
 	/**
 	 * @param string $box
-	 * @param string $secret
 	 * @param string $nonce
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function openSecretBox(string $box, string $secret, string $nonce):CryptoBoxInterface{
-		return (new SecretBox(['keypair' => new BoxKeypair(['secret' => $secret])]))
-			->open($box, $nonce);
+	protected function openSecretBox(string $box, string $nonce):CryptoBoxInterface{
+		return (new SecretBox(['keypair' => $this->cryptoKeyInterface]))->open($box, $nonce);
 	}
 
 	/**
 	 * @param string $message
-	 * @param string $public
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function createSealedBox(string $message, string $public):CryptoBoxInterface{
-		return (new SealedBox(['keypair' => new BoxKeypair(['public' => $public])]))
-			->create($message);
+	protected function createSealedBox(string $message):CryptoBoxInterface{
+		return (new SealedBox(['keypair' => $this->cryptoKeyInterface]))->create($message);
 	}
 
 	/**
 	 * @param string $box
-	 * @param string $secret
-	 * @param string $public
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function openSealedBox(string $box, string $secret, string $public):CryptoBoxInterface{
-		return (new SealedBox(['keypair' => new BoxKeypair(['secret' => $secret, 'public' => $public])]))
-			->open($box);
+	protected function openSealedBox(string $box):CryptoBoxInterface{
+		return (new SealedBox(['keypair' => $this->cryptoKeyInterface]))->open($box);
 	}
 
 	/**
 	 * @param string $message
-	 * @param string $secret
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function signMessage(string $message, string $secret):CryptoBoxInterface{
-		return (new SignedMessage(['keypair' => new SignKeypair(['secret' => $secret])]))
-			->create($message);
+	protected function signMessage(string $message):CryptoBoxInterface{
+		return (new SignedMessage(['keypair' => $this->cryptoKeyInterface]))->create($message);
 	}
 
 	/**
 	 * @param string $box
-	 * @param string $public
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	protected function verifySignedMessage(string $box, string $public):CryptoBoxInterface{
-		return (new SignedMessage(['keypair' => new SignKeypair(['public' => $public])]))
-			->open($box);
+	protected function verifySignedMessage(string $box):CryptoBoxInterface{
+		return (new SignedMessage(['keypair' => $this->cryptoKeyInterface]))->open($box);
 	}
 
 }

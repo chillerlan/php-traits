@@ -14,6 +14,7 @@ namespace chillerlan\Traits\Crypto;
 
 class SignedMessage extends CryptoBox{
 
+	/** @inheritdoc */
 	public function create(string $message):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_SIGN_SECRETKEYBYTES);
 
@@ -24,12 +25,17 @@ class SignedMessage extends CryptoBox{
 		return $this;
 	}
 
+	/** @inheritdoc */
 	public function open(string $box_bin):CryptoBoxInterface{
 		$this->checkKeypair(null, SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES);
 
 		$this->message = sodium_crypto_sign_open($box_bin, $this->keypair->public);
 
 		sodium_memzero($box_bin);
+
+		if($this->message === false){
+			throw new CryptoException('invalid box'); // @codeCoverageIgnore
+		}
 
 		return $this;
 	}

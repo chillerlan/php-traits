@@ -12,6 +12,7 @@
 
 namespace chillerlan\TraitTest\Crypto;
 
+use chillerlan\Traits\Crypto\BoxKeypair;
 use chillerlan\Traits\Crypto\CryptoKeyInterface;
 use chillerlan\Traits\Crypto\CryptoTrait;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +28,7 @@ class CryptoTest extends TestCase{
 	}
 
 	const TESTKEY                         = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f";
+	const TESTNONCE                       = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01";
 	const TESTKEY_BOX_SECRET_FROM_SEED    = '3d94eea49c580aef816935762be049559d6d1440dede12e6a125f1841fff8e6f';
 	const TESTKEY_BOX_PUBLIC_FROM_SEED    = '4701d08488451f545a409fb58ae3e58581ca40ac3f7f114698cd71deac73ca01';
 	const TESTKEY_BOX_PUBLIC_FROM_SECRET  = '8f40c5adb68f25624ae5b214ea767a6ec94d829d3d7b5e1ad1ba6f3e2138285f';
@@ -61,7 +63,7 @@ class CryptoTest extends TestCase{
 		$this->createBoxKeypair('00');
 	}
 
-	public function testCreateBoxPublicFromSecret(){
+	public function testCreateBoxKeypairFromSecret(){
 		$keypair = $this->createBoxKeypairFromSecret($this::TESTKEY);
 
 		$this->assertSame($this::TESTKEY, $keypair->secret);
@@ -72,7 +74,7 @@ class CryptoTest extends TestCase{
 	 * @expectedException \chillerlan\Traits\TraitException
 	 * @expectedExceptionMessage invalid secret key length
 	 */
-	public function testCreateBoxPublicFromSecretInvalidLength(){
+	public function testCreateBoxKeypairFromSecretInvalidLength(){
 		$this->createBoxKeypairFromSecret('00');
 	}
 
@@ -102,38 +104,96 @@ class CryptoTest extends TestCase{
 		$this->createSignKeypair('00');
 	}
 
-	public function testCreateBox(){
-		$kp = $this->createBoxKeypair();
+	public function testBox(){
+		$this->cryptoKeyInterface = $this->createBoxKeypair();
 
-		$e = $this->createBox(self::TESTMESSAGE, $kp->secret, $kp->public);
-		$d = $this->openBox($e->box, $kp->secret, $kp->public, $e->nonce);
-
-		$this->assertSame(self::TESTMESSAGE, $d->message);
-	}
-
-	public function testCreateSecretBox(){
-		$kp = $this->createBoxKeypair();
-
-		$e = $this->createSecretBox(self::TESTMESSAGE, $kp->secret);
-		$d = $this->openSecretBox($e->box, $kp->secret, $e->nonce);
+		$e = $this->createBox(self::TESTMESSAGE, null);
+		$d = $this->openBox($e->box, $e->nonce);
 
 		$this->assertSame(self::TESTMESSAGE, $d->message);
 	}
 
-	public function testCreateSealedBox(){
-		$kp = $this->createBoxKeypair();
+	public function testBoxWithFixedNonce(){
+		$this->cryptoKeyInterface = $this->createBoxKeypair();
 
-		$e = $this->createSealedBox(self::TESTMESSAGE, $kp->public);
-		$d = $this->openSealedBox($e->box, $kp->secret, $kp->public);
+		$e = $this->createBox(self::TESTMESSAGE, $this::TESTNONCE);
+		$d = $this->openBox($e->box, $this::TESTNONCE);
+
+		$this->assertSame(self::TESTMESSAGE, $d->message);
+	}
+
+	/**
+	 * @expectedException \chillerlan\Traits\Crypto\CryptoException
+	 * @expectedExceptionMessage invalid message
+	 */
+	public function testCreateBoxInvalidMessage(){
+		$this->cryptoKeyInterface = $this->createBoxKeypair();
+
+		$this->createBox('', null);
+	}
+
+	/**
+	 * @expectedException \chillerlan\Traits\Crypto\CryptoException
+	 * @expectedExceptionMessage invalid secret key
+	 */
+	public function testCreateBoxInvalidSecret(){
+		$this->cryptoKeyInterface = new BoxKeypair(['secret' => 'foo', 'public' => $this::TESTKEY]);
+
+		$this->createBox(self::TESTMESSAGE, null);
+	}
+
+	/**
+	 * @expectedException \chillerlan\Traits\Crypto\CryptoException
+	 * @expectedExceptionMessage invalid public key
+	 */
+	public function testCreateBoxInvalidPublic(){
+		$this->cryptoKeyInterface = new BoxKeypair(['secret' => $this::TESTKEY, 'public' => 'foo']);
+
+		$this->createBox(self::TESTMESSAGE, null);
+	}
+
+	public function testSecretBox(){
+		$this->cryptoKeyInterface = $this->createBoxKeypair();
+
+		$e = $this->createSecretBox(self::TESTMESSAGE, null);
+		$d = $this->openSecretBox($e->box, $e->nonce);
+
+		$this->assertSame(self::TESTMESSAGE, $d->message);
+	}
+
+	public function testSecretBoxWithFixedNonce(){
+		$this->cryptoKeyInterface = $this->createBoxKeypair();
+
+		$e = $this->createSecretBox(self::TESTMESSAGE, $this::TESTNONCE);
+		$d = $this->openSecretBox($e->box, $this::TESTNONCE);
+
+		$this->assertSame(self::TESTMESSAGE, $d->message);
+	}
+
+	/**
+	 * @expectedException \SodiumException
+	 * @expectedExceptionMessage nonce size should be SODIUM_CRYPTO_SECRETBOX_NONCEBYTES bytes
+	 */
+	public function testCreateSecretBoxInvalidNonce(){
+		$this->cryptoKeyInterface = $this->createBoxKeypair();
+
+		$this->createSecretBox(self::TESTMESSAGE, 'foo');
+	}
+
+	public function testSealedBox(){
+		$this->cryptoKeyInterface = $this->createBoxKeypair();
+
+		$e = $this->createSealedBox(self::TESTMESSAGE);
+		$d = $this->openSealedBox($e->box);
 
 		$this->assertSame(self::TESTMESSAGE, $d->message);
 	}
 
 	public function testSignMessage(){
-		$kp = $this->createSignKeypair();
+		$this->cryptoKeyInterface = $this->createSignKeypair();
 
-		$e = $this->signMessage(self::TESTMESSAGE, $kp->secret);
-		$d = $this->verifySignedMessage($e->box, $kp->public);
+		$e = $this->signMessage(self::TESTMESSAGE);
+		$d = $this->verifySignedMessage($e->box);
 
 		$this->assertSame(self::TESTMESSAGE, $d->message);
 	}
