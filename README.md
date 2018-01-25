@@ -37,6 +37,11 @@ A collection of (more or less) useful traits for PHP7+
   - `ByteArrayDispenser` - creates `ByteArray` from several data types (hex, base64, binary, json etc.)
   - `DotArray` - adds dot key notation functionality
   - `SearchableArray` - deep search arrays using [`RecursiveIteratorIterator`](http://php.net/manual/class.recursiveiteratoriterator.php)
+- `Crypto` (requires the [Sodium extension](http://php.net/manual/book.sodium.php))
+  - `CryptoBoxInterface`: `Box`, `SecretBox`, `SealedBox`, `SignedMessage`
+  - `CryptoKeyInterface`: `BoxKeypair`, `SignKeypair`
+  - `CryptoTrait` provides shorthand methods for the above
+  - `MemzeroDestructorTrait` - performs `sodium_memzero` on object variables when `__destruct()` is being called
 - `Interfaces`
   - `ArrayAccessTrait` - implements [`ArrayAccess`](http://php.net/manual/class.arrayaccess.php)
   - `IteratorTrait` - implements [`Iterator`](http://php.net/manual/class.iterator.php)
