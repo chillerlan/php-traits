@@ -15,7 +15,7 @@ namespace chillerlan\Traits\Crypto;
 class SignKeypair extends CryptoKeypair{
 
 	/** @inheritdoc */
-	public function create(string $seed_bin = null):CryptoKeyInterface{
+	public function create(string &$seed_bin = null):CryptoKeyInterface{
 
 		if($seed_bin !== null && strlen($seed_bin) !== SODIUM_CRYPTO_SIGN_SEEDBYTES){
 			throw new CryptoException('invalid seed length');

@@ -17,7 +17,66 @@ trait CryptoTrait{
 	/**
 	 * @var \chillerlan\Traits\Crypto\CryptoKeyInterface
 	 */
-	protected $cryptoKeyInterface;
+	private $cryptoKeyInterface;
+
+	/**
+	 * @param string|null $secret_hex
+	 * @param string|null $public_hex
+	 *
+	 * @return $this
+	 */
+	protected function setBoxKeypair(string $secret_hex = null, string $public_hex = null){
+		return $this->setCryptoKeyInterface(BoxKeypair::class, $secret_hex, $public_hex);
+	}
+
+	/**
+	 * @param string|null $secret_hex
+	 * @param string|null $public_hex
+	 *
+	 * @return $this
+	 */
+	protected function setSignKeypair(string $secret_hex = null, string $public_hex = null){
+		return $this->setCryptoKeyInterface(SignKeypair::class, $secret_hex, $public_hex);
+	}
+
+	/**
+	 * @param \chillerlan\Traits\Crypto\CryptoKeyInterface $keypair
+	 *
+	 * @return $this
+	 */
+	protected function setKeypair(CryptoKeyInterface $keypair){
+		unset($this->cryptoKeyInterface);
+
+		$this->cryptoKeyInterface = $keypair;
+
+		return $this;
+	}
+
+	/**
+	 * @param string      $type_fqcn
+	 * @param string|null $secret_hex
+	 * @param string|null $public_hex
+	 *
+	 * @return $this
+	 */
+	private function setCryptoKeyInterface(string $type_fqcn, string &$secret_hex = null, string &$public_hex = null){
+		unset($this->cryptoKeyInterface);
+
+		$this->cryptoKeyInterface = new $type_fqcn([
+			'secret' => !empty($secret_hex) ? sodium_hex2bin($secret_hex) : null,
+			'public' => !empty($public_hex) ? sodium_hex2bin($public_hex) : null,
+		]);
+
+		if($secret_hex !== null){
+			sodium_memzero($secret_hex);
+		}
+
+		if($public_hex !== null){
+			sodium_memzero($public_hex);
+		}
+
+		return $this;
+	}
 
 	/**
 	 * @param string $seed_bin

@@ -15,7 +15,7 @@ namespace chillerlan\Traits\Crypto;
 class SignedMessage extends CryptoBox{
 
 	/** @inheritdoc */
-	public function create(string $message):CryptoBoxInterface{
+	public function create(string &$message):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_SIGN_SECRETKEYBYTES);
 
 		$this->box = sodium_crypto_sign($this->checkMessage($message), $this->keypair->secret);
@@ -26,7 +26,7 @@ class SignedMessage extends CryptoBox{
 	}
 
 	/** @inheritdoc */
-	public function open(string $box_bin):CryptoBoxInterface{
+	public function open(string &$box_bin):CryptoBoxInterface{
 		$this->checkKeypair(null, SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES);
 
 		$this->message = sodium_crypto_sign_open($box_bin, $this->keypair->public);

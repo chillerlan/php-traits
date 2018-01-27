@@ -24,6 +24,6 @@ interface CryptoKeyInterface{
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoKeyInterface
 	 */
-	public function create(string $seed_bin = null):CryptoKeyInterface;
+	public function create(string &$seed_bin = null):CryptoKeyInterface;
 
 }

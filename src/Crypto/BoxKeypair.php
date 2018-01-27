@@ -15,7 +15,7 @@ namespace chillerlan\Traits\Crypto;
 class BoxKeypair extends CryptoKeypair{
 
 	/** @inheritdoc */
-	public function create(string $seed_bin = null):CryptoKeyInterface{
+	public function create(string &$seed_bin = null):CryptoKeyInterface{
 
 		if($seed_bin !== null && strlen($seed_bin) !== SODIUM_CRYPTO_BOX_SEEDBYTES){
 			throw new CryptoException('invalid seed length');
@@ -44,7 +44,7 @@ class BoxKeypair extends CryptoKeypair{
 	 * @return \chillerlan\Traits\Crypto\CryptoKeyInterface
 	 * @throws \chillerlan\Traits\Crypto\CryptoException
 	 */
-	public function createFromSecret(string $secret_bin):CryptoKeyInterface{
+	public function createFromSecret(string &$secret_bin):CryptoKeyInterface{
 
 		if(strlen($secret_bin) !== SODIUM_CRYPTO_BOX_SECRETKEYBYTES){
 			throw new CryptoException('invalid secret key length');

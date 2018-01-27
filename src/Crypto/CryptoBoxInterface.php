@@ -27,6 +27,6 @@ interface CryptoBoxInterface{
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	public function create(string $message):CryptoBoxInterface;
+	public function create(string &$message):CryptoBoxInterface;
 
 }

@@ -20,7 +20,7 @@ class SecretBox extends CryptoBox{
 	 *
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 */
-	public function create(string $message, string $nonce_bin = null):CryptoBoxInterface{
+	public function create(string &$message, string &$nonce_bin = null):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_BOX_SECRETKEYBYTES);
 
 		$message     = $this->checkMessage($message);
@@ -43,7 +43,7 @@ class SecretBox extends CryptoBox{
 	 * @return \chillerlan\Traits\Crypto\CryptoBoxInterface
 	 * @throws \chillerlan\Traits\Crypto\CryptoException
 	 */
-	public function open(string $box_bin, string $nonce_bin):CryptoBoxInterface{
+	public function open(string &$box_bin, string &$nonce_bin):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_BOX_SECRETKEYBYTES);
 
 		$this->message = sodium_crypto_secretbox_open($box_bin, $nonce_bin, $this->keypair->secret);
