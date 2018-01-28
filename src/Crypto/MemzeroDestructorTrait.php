@@ -19,6 +19,10 @@ trait MemzeroDestructorTrait{
 	 */
 	public function __destruct(){
 
+		if(!function_exists('sodium_memzero')){
+			return;
+		}
+
 		foreach(array_keys(get_object_vars($this)) as $key){
 
 			if(is_scalar($this->{$key})){
