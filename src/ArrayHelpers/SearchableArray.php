@@ -23,11 +23,6 @@ trait SearchableArray{
 	protected $iterator;
 
 	/**
-	 * @var array
-	 */
-	protected $array;
-
-	/**
 	 * ExtendedIteratorTrait constructor.
 	 *
 	 * @param array|object|\Traversable|\ArrayIterator|\ArrayObject|null $array
@@ -47,9 +42,11 @@ trait SearchableArray{
 		elseif(is_array($array)){
 			$this->array = $array;
 		}
-		else{
-			$this->array = [];
-		}
+
+		$this->iterator = new RecursiveIteratorIterator(
+			new RecursiveArrayIterator($this->array),
+			RecursiveIteratorIterator::SELF_FIRST
+		);
 	}
 
 	/**
@@ -57,8 +54,7 @@ trait SearchableArray{
 	 *
 	 * @return mixed
 	 */
-	public function search(string $dotKey){
-		$this->iterator = $this->getRecursiveIteratorIterator();
+	public function searchByKey(string $dotKey){
 
 		foreach($this->iterator as $v){
 
@@ -71,13 +67,27 @@ trait SearchableArray{
 		return null;
 	}
 
+	public function searchByValue($value):array {
+
+		$matches = [];
+
+		foreach($this->iterator as $v){
+
+			if($v === $value){
+				$matches[$this->getPath()] = $value;
+			}
+
+		}
+
+		return $matches;
+	}
+
 	/**
 	 * @param string $dotKey
 	 *
 	 * @return bool
 	 */
 	public function isset(string $dotKey):bool{
-		$this->iterator = $this->getRecursiveIteratorIterator();
 
 		foreach($this->iterator as $v){
 
@@ -88,13 +98,6 @@ trait SearchableArray{
 		}
 
 		return false;
-	}
-
-	/**
-	 * @return \RecursiveIteratorIterator
-	 */
-	private function getRecursiveIteratorIterator():RecursiveIteratorIterator{
-		return new RecursiveIteratorIterator(new RecursiveArrayIterator($this->array), RecursiveIteratorIterator::SELF_FIRST);
 	}
 
 	/**

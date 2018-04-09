@@ -22,10 +22,10 @@ class SearchableArrayTest extends TestCase{
 		$k = 'regions.7.maps.38.points_of_interest.990.name';
 
 		$this->assertSame('Stonemist Keep', $array->get($k));
-		$this->assertSame('Stonemist Keep', $array->search($k)); // RecursiveIterator
+		$this->assertSame('Stonemist Keep', $array->searchByKey($k)); // RecursiveIterator
 
 		$this->assertNull($array->get($k.'.foo'));
-		$this->assertNull($array->search($k.'.foo')); // RecursiveIterator
+		$this->assertNull($array->searchByKey($k.'.foo')); // RecursiveIterator
 
 		$this->assertTrue($array->in($k));
 		$this->assertTrue($array->isset($k)); // RecursiveIterator
