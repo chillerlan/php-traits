@@ -27,7 +27,7 @@ A collection of (more or less) useful traits for PHP7+
 
 ## Features
 - `ClassLoader` - invokes objects of a given class and interface/type with an arbitrary count of constructor arguments
-- `Container` - provides a magic getter & setter and some fancy, implements `ContainerInterface`
+- `Container` - provides immutable properties with magic getter & setter and some fancy, implements `ContainerInterface`
 - `Magic` - turns methods into magic properties
 - `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/), implements `EnumerableInterface`
 - `Env` - loads contents from a `.env` file into the environment (similar to [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv))
