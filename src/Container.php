@@ -144,10 +144,12 @@ trait Container{
 	}
 
 	/**
+	 * @param bool|null $prettyprint
+	 *
 	 * @return string
 	 */
-	public function __toJSON():string{
-		return json_encode($this->__toArray());
+	public function __toJSON(bool $prettyprint = null):string{
+		return json_encode($this->__toArray(), $prettyprint ? JSON_PRETTY_PRINT : 0);
 	}
 
 	/**
