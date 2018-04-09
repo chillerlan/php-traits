@@ -71,9 +71,12 @@ trait ClassLoader{
 
 			return $object;
 		}
+		// @codeCoverageIgnoreStart
+		// here be dragons
 		catch(Exception $e){
 			throw new TraitException('ClassLoader: '.$e->getMessage());
 		}
+		// @codeCoverageIgnoreEnd
 
 	}
 
