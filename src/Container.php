@@ -44,6 +44,11 @@ trait Container{
 	 */
 	public function __get(string $property){
 
+
+		if(method_exists($this, 'get_'.$property) && $this->__isset($property)){
+			return call_user_func([$this, 'get_'.$property]);
+		}
+
 		if($this->__isset($property)){
 			return $this->{$property};
 		}
@@ -62,6 +67,12 @@ trait Container{
 	 */
 	public function __set(string $property, $value){
 
+		if(method_exists($this, 'set_'.$property) && !$this->__isPrivate($property)){
+			call_user_func_array([$this, 'set_'.$property], [$value]);
+
+			return;
+		}
+
 		// avoid overwriting private properties
 		if(property_exists($this, $property) && !$this->__isPrivate($property)){
 			$this->{$property} = $value;
@@ -78,7 +89,7 @@ trait Container{
 	 * @return bool
 	 */
 	public function __isset(string $property):bool{
-		return (property_exists($this, $property) && !$this->__isPrivate($property)) || ($this->env instanceof DotEnv && $this->env->get($property));
+		return (isset($this->{$property}) && !$this->__isPrivate($property)) || ($this->env instanceof DotEnv && $this->env->get($property));
 	}
 
 	/**
