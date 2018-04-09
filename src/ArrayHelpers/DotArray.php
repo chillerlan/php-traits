@@ -20,7 +20,7 @@ trait DotArray{
 	/**
 	 * @var array
 	 */
-	protected $array;
+	protected $array = [];
 
 	/**
 	 *  Checks if $key isset in $array using dot notation and returns it on success.
