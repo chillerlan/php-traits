@@ -38,8 +38,9 @@ class ContainerTraitTest extends TestCase{
 
 		// isset test
 		$this->assertTrue(isset($container->test1));
-		$this->assertTrue(isset($container->test2));
+		$this->assertFalse(isset($container->test2));
 		$this->assertFalse(isset($container->test3));
+		$this->assertFalse(isset($container->foo));
 	}
 
 	public function testSet(){
@@ -51,17 +52,30 @@ class ContainerTraitTest extends TestCase{
 		$this->assertSame('bar', $container->test1);
 		$this->assertSame('what', $container->test2);
 		$this->assertNull($container->test3);
+
+		// unset
+		unset($container->test1);
+		$this->assertFalse(isset($container->test1));
 	}
 
 	public function testToArray(){
-
-		$arr = [
-			'test1' => 'no',
-			'test2' => true,
-		];
+		$arr = ['test1' => 'no', 'test2' => true];
 
 		$container = new TestContainer($arr);
 
 		$this->assertSame($arr, $container->__toArray());
+		$this->assertSame('{"test1":"no","test2":true}', $container->__toJSON());
+
 	}
+
+	public function testToJSON(){
+		$json = '{"test1":"no","test2":true}';
+
+		$container = (new TestContainer)->__fromJSON($json);
+
+		$this->assertSame($json, $container->__toJSON());
+		$this->assertSame($json, (string)$container);
+		$this->assertSame(['test1' => 'no', 'test2' => true], $container->__toArray());
+	}
+
 }
