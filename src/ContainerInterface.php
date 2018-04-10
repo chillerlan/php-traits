@@ -67,9 +67,11 @@ interface ContainerInterface{
 	public function __fromIterable(array $properties);
 
 	/**
+	 * @param bool|null $prettyprint
+	 *
 	 * @return string
 	 */
-	public function __toJSON():string;
+	public function __toJSON(bool $prettyprint = null):string;
 
 	/**
 	 * @param string $json

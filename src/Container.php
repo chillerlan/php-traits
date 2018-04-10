@@ -45,14 +45,15 @@ trait Container{
 	public function __get(string $property){
 
 
-		if(method_exists($this, 'get_'.$property) && $this->__isset($property)){
-			return call_user_func([$this, 'get_'.$property]);
-		}
+#		if(method_exists($this, 'get_'.$property) && $this->__isset($property)){
+#			return call_user_func([$this, 'get_'.$property]);
+#		}
 
 		if($this->__isset($property)){
 			return $this->{$property};
 		}
-		elseif($this->env instanceof DotEnv){
+
+		if(property_exists($this, 'env') && $this->env instanceof DotEnv){
 			return $this->env->get($property);
 		}
 
@@ -67,20 +68,23 @@ trait Container{
 	 */
 	public function __set(string $property, $value){
 
-		if(method_exists($this, 'set_'.$property) && !$this->__isPrivate($property)){
-			call_user_func_array([$this, 'set_'.$property], [$value]);
-
-			return;
-		}
+#		if(method_exists($this, 'set_'.$property) && !$this->__isPrivate($property)){
+#			call_user_func_array([$this, 'set_'.$property], [$value]);
+#			return;
+#		}
 
 		// avoid overwriting private properties
 		if(property_exists($this, $property) && !$this->__isPrivate($property)){
 			$this->{$property} = $value;
-		}
-		elseif($this->env instanceof DotEnv){
-			$this->env->set($property, $value);
+			return;
 		}
 
+		if(property_exists($this, 'env') && $this->env instanceof DotEnv){
+			$this->env->set($property, $value);
+			return;
+		}
+
+		return; // should not see me
 	}
 
 	/**
@@ -89,7 +93,8 @@ trait Container{
 	 * @return bool
 	 */
 	public function __isset(string $property):bool{
-		return (isset($this->{$property}) && !$this->__isPrivate($property)) || ($this->env instanceof DotEnv && $this->env->get($property));
+		return (isset($this->{$property}) && !$this->__isPrivate($property))
+		       || (property_exists($this, 'env') && $this->env instanceof DotEnv && $this->env->get($property));
 	}
 
 	/**
