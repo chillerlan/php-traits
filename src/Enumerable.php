@@ -90,8 +90,15 @@ trait Enumerable{
 	/**
 	 * @return mixed
 	 */
+	public function __first(){
+		return $this->array[0] ?? null;
+	}
+
+	/**
+	 * @return mixed
+	 */
 	public function __last(){
-		return $this->array[count($this->array) - 1];
+		return $this->array[count($this->array) - 1] ?? null;
 	}
 
 	/**

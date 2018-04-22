@@ -41,6 +41,11 @@ interface EnumerableInterface{
 	/**
 	 * @return mixed
 	 */
+	public function __first();
+
+	/**
+	 * @return mixed
+	 */
 	public function __last();
 
 	/**
