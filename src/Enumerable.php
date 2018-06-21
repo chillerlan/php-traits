@@ -45,7 +45,7 @@ trait Enumerable{
 	 *
 	 * @return $this
 	 */
-	public function __each(callable $callback){
+	public function __each($callback){
 		$this->__map($callback);
 
 		return $this;
@@ -127,7 +127,7 @@ trait Enumerable{
 	 * @return array
 	 * @throws \chillerlan\Traits\TraitException
 	 */
-	public function __findAll(callable $callback):array{
+	public function __findAll($callback):array{
 
 		if(!is_callable($callback)){
 			throw new TraitException('invalid callback');
@@ -154,7 +154,7 @@ trait Enumerable{
 	 * @return array
 	 * @throws \chillerlan\Traits\TraitException
 	 */
-	public function __reject(callable $callback):array{
+	public function __reject($callback):array{
 
 		if(!is_callable($callback)){
 			throw new TraitException('invalid callback');
