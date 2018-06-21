@@ -12,20 +12,16 @@
 
 namespace chillerlan\TraitTest\Container;
 
-use chillerlan\Traits\Container;
-use chillerlan\Traits\ContainerInterface;
+use chillerlan\Traits\ContainerAbstract;
 
 /**
  * @property $test1
  * @property $test2
  * @property $test3
+ * @property $testConstruct
  */
-class TestContainer implements ContainerInterface{
-	use Container;
-
-	protected $test1 = 'foo';
-
-	protected $test2;
+class TestContainer extends ContainerAbstract{
+	use TestOptionsTrait;
 
 	private  $test3 = 'what';
 }

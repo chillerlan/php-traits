@@ -26,6 +26,8 @@ class ContainerTraitTest extends TestCase{
 		$this->assertSame('test1', $container->test1);
 		$this->assertSame('test2', $container->test2);
 		$this->assertNull($container->test3);
+
+		$this->assertSame('success', $container->testConstruct);
 	}
 
 	public function testGet(){
@@ -59,23 +61,23 @@ class ContainerTraitTest extends TestCase{
 	}
 
 	public function testToArray(){
-		$arr = ['test1' => 'no', 'test2' => true];
+		$arr = ['test1' => 'no', 'test2' => true, 'testConstruct' => 'success'];
 
 		$container = new TestContainer($arr);
 
 		$this->assertSame($arr, $container->__toArray());
-		$this->assertSame('{"test1":"no","test2":true}', $container->__toJSON());
+		$this->assertSame('{"test1":"no","test2":true,"testConstruct":"success"}', $container->__toJSON());
 
 	}
 
 	public function testToJSON(){
-		$json = '{"test1":"no","test2":true}';
+		$json = '{"test1":"no","test2":true,"testConstruct":"success"}';
 
 		$container = (new TestContainer)->__fromJSON($json);
 
 		$this->assertSame($json, $container->__toJSON());
 		$this->assertSame($json, (string)$container);
-		$this->assertSame(['test1' => 'no', 'test2' => true], $container->__toArray());
+		$this->assertSame(['test1' => 'no', 'test2' => true, 'testConstruct' => 'success'], $container->__toArray());
 	}
 
 }

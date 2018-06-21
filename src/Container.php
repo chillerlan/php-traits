@@ -12,7 +12,7 @@
 
 namespace chillerlan\Traits;
 
-use ReflectionProperty;
+use ReflectionClass, ReflectionProperty;
 
 /**
  * a generic container with magic getter and setter
@@ -28,6 +28,16 @@ trait Container{
 			$this->__fromIterable($properties);
 		}
 
+		// call a method with trait name as replacement constructor for each trait
+		$traits = (new ReflectionClass($this))->getTraits();
+
+		foreach($traits as $trait){
+			$method = $trait->getShortName();
+
+			if(method_exists($this, $method)){
+				call_user_func([$this, $trait->getShortName()]);
+			}
+		}
 	}
 
 	/**
