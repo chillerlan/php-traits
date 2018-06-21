@@ -20,16 +20,9 @@ use ReflectionProperty;
 trait Container{
 
 	/**
-	 * @var \chillerlan\Traits\DotEnv|null
+	 * @param iterable $properties
 	 */
-	private $env;
-
-	/**
-	 * @param iterable                       $properties
-	 * @param \chillerlan\Traits\DotEnv|null $env
-	 */
-	public function __construct(array $properties = null, DotEnv $env = null){
-#		$this->env = $env;
+	public function __construct(array $properties = null){
 
 		if(!empty($properties)){
 			$this->__fromIterable($properties);
@@ -48,10 +41,6 @@ trait Container{
 			return $this->{$property};
 		}
 
-#		if(property_exists($this, 'env') && $this->env instanceof DotEnv){
-#			return $this->env->get($property);
-#		}
-
 		return null;
 	}
 
@@ -69,11 +58,6 @@ trait Container{
 			return;
 		}
 
-#		if(property_exists($this, 'env') && $this->env instanceof DotEnv){
-#			$this->env->set($property, $value);
-#			return;
-#		}
-
 		return; // should not see me
 	}
 
@@ -83,9 +67,7 @@ trait Container{
 	 * @return bool
 	 */
 	public function __isset(string $property):bool{
-		return (isset($this->{$property}) && !$this->__isPrivate($property))
-#		       || (property_exists($this, 'env') && $this->env instanceof DotEnv && $this->env->get($property))
-			;
+		return (isset($this->{$property}) && !$this->__isPrivate($property));
 	}
 
 	/**
