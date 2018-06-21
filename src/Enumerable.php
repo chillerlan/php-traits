@@ -173,24 +173,4 @@ trait Enumerable{
 		return $return;
 	}
 
-	/**
-	 * @param array $y
-	 *
-	 * @return bool
-	 */
-	public function __equal(array $y):bool{
-
-		if(count($this->array) !== count($y)){
-			return false;
-		}
-
-		$diff = 0;
-
-		foreach($this->array as $kx => $vx){
-			$diff |= $vx ^ $y[$kx];
-		}
-
-		return ((($diff - 1) >> 31) & 1) === 1;
-	}
-
 }

@@ -72,11 +72,4 @@ interface EnumerableInterface{
 	 */
 	public function __reject(callable $callback):array;
 
-	/**
-	 * @param array $y
-	 *
-	 * @return bool
-	 */
-	public function __equal(array $y):bool;
-
 }
