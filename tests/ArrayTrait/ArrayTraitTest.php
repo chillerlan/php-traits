@@ -21,6 +21,10 @@ class SearchableArrayTest extends TestCase{
 
 		$k = 'regions.7.maps.38.points_of_interest.990.name';
 
+		// coverage - first level
+		$this->assertSame('World vs. World', $array->get('regions')[7]['name']);
+		$this->assertTrue($array->in('regions'));
+
 		$this->assertSame('Stonemist Keep', $array->get($k));
 		$this->assertSame('Stonemist Keep', $array->searchByKey($k)); // RecursiveIterator
 
