@@ -45,7 +45,6 @@ A collection of (more or less) useful traits for PHP7+
 - `Interfaces`
   - `ArrayAccessTrait` - implements [`ArrayAccess`](http://php.net/manual/class.arrayaccess.php)
   - `IteratorTrait` - implements [`Iterator`](http://php.net/manual/class.iterator.php)
-  - `SerializableTrait` - implements [`Serializable`](http://php.net/manual/class.serializable.php)
 - `SPL`
   - `CountableTrait` - implements [`Countable`](http://php.net/manual/class.countable.php)
   - `SeekableIteratorTrait` - implements [`SeekableIterator`](http://php.net/manual/class.seekableiterator.php)
