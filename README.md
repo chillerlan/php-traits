@@ -27,7 +27,7 @@ A collection of (more or less) useful traits for PHP7+
 
 ## Features
 - `ClassLoader` - invokes objects of a given class and interface/type with an arbitrary count of constructor arguments
-- `Container` - provides immutable properties with magic getter & setter and some fancy, implements `ContainerInterface`
+- `ImmutableSettingsContainer` - provides immutable properties with magic getter & setter and some fancy, implements `ImmutableSettingsInterface`
 - `Magic` - turns methods into magic properties
 - `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/), implements `EnumerableInterface`
 - `Env` - loads contents from a `.env` file into the environment (similar to [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv))
@@ -124,13 +124,18 @@ class MyClass{
 ```
 
 
-#### `Container`
+#### `ImmutableSettingsContainer`
+
+The `ImmutableSettingsContainer` trait (wrapped in`ImmutableSettingsAbstract` ) provides plug-in functionality for immutable object variables and adds some fancy, like loading/saving JSON, arrays etc. 
+It takes an array (planned: iterable) as the only constructor argument and calls a method (`MyTrait::MyTrait()`) for each trait on invocation.
+
+##### Simple usage
 ```php
-class MyContainer implements ContainerInterface{
-	use Container;
+class MyContainer extends ImmutableSettingsAbstract{
 
 	protected $foo;
 	protected $bar;
+	
 }
 ```
 
@@ -157,6 +162,35 @@ $container->nope = 'what';
 var_dump($container->nope); // -> null
 ```
 
+##### Advanced usage
+```php
+trait SomeOptions{
+	protected $foo;
+	
+	// this method will be called in ImmutableSettingsAbstract::__construct() after the properties have been set
+	protected function SomeOptions(){
+		// just some constructor stuff...
+		$this->foo = strtoupper($this->foo);
+	}
+}
+
+trait MoreOptions{
+	protected $bar;
+}
+```
+
+```php
+$commonOptions = [
+	// SomeOptions
+	'foo' => 'whatever', 
+	// MoreOptions
+	'bar' => 'nothing',
+];
+
+$container = new class ($commonOptions) extends ImmutableSettingsAbstract{
+	use SomeOptions, MoreOptions;
+};
+```
 
 #### `Magic`
 `Magic` allows to access internal methods like as properties.
