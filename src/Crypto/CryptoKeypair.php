@@ -12,14 +12,14 @@
 
 namespace chillerlan\Traits\Crypto;
 
-use chillerlan\Traits\{Container, ContainerInterface};
+use chillerlan\Traits\{ImmutableSettingsContainer, ImmutableSettingsInterface};
 
 /**
  * @link https://paragonie.com/book/pecl-libsodium/read/00-intro.md
  * @link https://paragonie.com/book/pecl-libsodium/read/01-quick-start.md
  */
-abstract class CryptoKeypair implements CryptoKeyInterface, ContainerInterface{
-	use MemzeroDestructorTrait, Container{
+abstract class CryptoKeypair implements CryptoKeyInterface, ImmutableSettingsInterface{
+	use MemzeroDestructorTrait, ImmutableSettingsContainer{
 		__construct as containerConstruct;
 	}
 
@@ -38,15 +38,14 @@ abstract class CryptoKeypair implements CryptoKeyInterface, ContainerInterface{
 	 */
 	protected $public;
 
-	/** @noinspection PhpMissingParentConstructorInspection */
 	/**
 	 * CryptoKeypair constructor.
 	 *
-	 * @param array|null $properties
+	 * @param iterable|null $properties
 	 *
 	 * @throws \chillerlan\Traits\Crypto\CryptoException
 	 */
-	public function __construct(array $properties = null){
+	public function __construct(iterable $properties = null){
 
 		if(!extension_loaded('sodium') || !function_exists('sodium_memzero')){
 			throw new CryptoException('sodium extension (PHP 7.2+) required!'); // @codeCoverageIgnore

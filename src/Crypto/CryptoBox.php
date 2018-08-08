@@ -13,15 +13,15 @@
 namespace chillerlan\Traits\Crypto;
 
 use chillerlan\Traits\{
-	Container, ContainerInterface
+	ImmutableSettingsContainer, ImmutableSettingsInterface
 };
 
 /**
  * @link https://paragonie.com/book/pecl-libsodium/read/00-intro.md
  * @link https://paragonie.com/book/pecl-libsodium/read/01-quick-start.md
  */
-abstract class CryptoBox implements CryptoBoxInterface, ContainerInterface{
-	use MemzeroDestructorTrait, Container{
+abstract class CryptoBox implements CryptoBoxInterface, ImmutableSettingsInterface{
+	use MemzeroDestructorTrait, ImmutableSettingsContainer{
 		__construct as containerConstruct;
 	}
 
@@ -49,11 +49,11 @@ abstract class CryptoBox implements CryptoBoxInterface, ContainerInterface{
 	/**
 	 * CryptoBox constructor.
 	 *
-	 * @param array|null $properties
+	 * @param iterable|null $properties
 	 *
 	 * @throws \chillerlan\Traits\Crypto\CryptoException
 	 */
-	public function __construct(array $properties = null){
+	public function __construct(iterable $properties = null){
 
 		if(!extension_loaded('sodium') || !function_exists('sodium_memzero')){
 			throw new CryptoException('sodium extension (PHP 7.2+) required!'); // @codeCoverageIgnore
@@ -69,7 +69,7 @@ abstract class CryptoBox implements CryptoBoxInterface, ContainerInterface{
 	 * @return void
 	 * @throws \chillerlan\Traits\Crypto\CryptoException
 	 */
-	protected function checkKeypair(int $secretLength = null, int $PublicLength = null){
+	protected function checkKeypair(int $secretLength = null, int $PublicLength = null):void{
 
 		if($secretLength !== null){
 			if(!$this->keypair->secret || strlen($this->keypair->secret) !== $secretLength){
@@ -91,7 +91,7 @@ abstract class CryptoBox implements CryptoBoxInterface, ContainerInterface{
 	 * @return string
 	 * @throws \chillerlan\Traits\Crypto\CryptoException
 	 */
-	protected function checkMessage(string $message):string {
+	protected function checkMessage(string $message):string{
 		$message = trim($message);
 
 		if(empty($message)){

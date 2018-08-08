@@ -42,7 +42,7 @@ trait IteratorTrait{
 	 * @link  http://php.net/manual/iterator.next.php
 	 * @inheritdoc
 	 */
-	public function next(){
+	public function next():void{
 		$this->offset++;
 	}
 
@@ -66,7 +66,7 @@ trait IteratorTrait{
 	 * @link  http://php.net/manual/iterator.rewind.php
 	 * @inheritdoc
 	 */
-	public function rewind(){
+	public function rewind():void{
 		$this->offset = 0;
 	}
 

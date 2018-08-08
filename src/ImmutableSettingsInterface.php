@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @filesource   ContainerInterface.php
+ * @filesource   ImmutableSettingsInterface.php
  * @created      04.01.2018
  * @author       Smiley <smiley@chillerlan.net>
  * @copyright    2018 Smiley
@@ -13,12 +13,12 @@ namespace chillerlan\Traits;
 /**
  * a generic container with magic getter and setter
  */
-interface ContainerInterface{
+interface ImmutableSettingsInterface{
 
 	/**
-	 * @param iterable $properties
+	 * @param iterable|null $properties
 	 */
-	public function __construct(array $properties = null);
+	public function __construct(iterable $properties = null);
 
 	/**
 	 * @param string $property
@@ -33,7 +33,7 @@ interface ContainerInterface{
 	 *
 	 * @return void
 	 */
-	public function __set(string $property, $value);
+	public function __set(string $property, $value):void;
 
 	/**
 	 * @param string $property
@@ -45,9 +45,9 @@ interface ContainerInterface{
 	/**
 	 * @param string $property
 	 *
-	 * @return mixed
+	 * @return void
 	 */
-	public function __unset(string $property);
+	public function __unset(string $property):void;
 
 	/**
 	 * @return string
@@ -62,9 +62,9 @@ interface ContainerInterface{
 	/**
 	 * @param iterable $properties
 	 *
-	 * @return \chillerlan\Traits\ContainerInterface
+	 * @return \chillerlan\Traits\ImmutableSettingsInterface
 	 */
-	public function __fromIterable(array $properties);
+	public function __fromIterable(iterable $properties);
 
 	/**
 	 * @param bool|null $prettyprint
@@ -76,7 +76,7 @@ interface ContainerInterface{
 	/**
 	 * @param string $json
 	 *
-	 * @return \chillerlan\Traits\ContainerInterface
+	 * @return \chillerlan\Traits\ImmutableSettingsInterface
 	 */
 	public function __fromJSON(string $json);
 

@@ -28,7 +28,7 @@ trait SeekableIteratorTrait{
 	 * @link  http://php.net/manual/seekableiterator.seek.php
 	 * @inheritdoc
 	 */
-	public function seek($pos){
+	public function seek($pos):void{
 		$this->rewind();
 
 		for( ; $this->offset < $pos; ){

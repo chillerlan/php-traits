@@ -23,21 +23,21 @@ trait SearchableArray{
 	protected $iterator;
 
 	/**
-	 * ExtendedIteratorTrait constructor.
+	 * SearchableArray constructor.
 	 *
 	 * @param array|object|\Traversable|\ArrayIterator|\ArrayObject|null $array
 	 */
 	public function __construct($array = null){
 
 		if(($array instanceof ArrayObject) || ($array instanceof ArrayIterator)){
-			$this->array = $array->getArrayCopy();
+			$this->array = $array->getArrayCopy(); // @codeCoverageIgnore
 		}
 		elseif($array instanceof Traversable){
-			$this->array = iterator_to_array($array);
+			$this->array = iterator_to_array($array); // @codeCoverageIgnore
 		}
 		// yields unexpected results with DotArray
 		elseif(gettype($array) === 'object'){
-			$this->array = get_object_vars($array);
+			$this->array = get_object_vars($array); // @codeCoverageIgnore
 		}
 		elseif(is_array($array)){
 			$this->array = $array;
@@ -67,7 +67,12 @@ trait SearchableArray{
 		return null;
 	}
 
-	public function searchByValue($value):array {
+	/**
+	 * @param mixed $value
+	 *
+	 * @return array
+	 */
+	public function searchByValue($value):array{
 
 		$matches = [];
 

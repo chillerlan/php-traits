@@ -22,7 +22,7 @@ trait Magic{
 	 *
 	 * @return mixed|null
 	 */
-	public function __get(string $name) {
+	public function __get(string $name){
 		return $this->get($name);
 	}
 
@@ -32,7 +32,7 @@ trait Magic{
 	 *
 	 * @return void
 	 */
-	public function __set(string $name, $value) {
+	public function __set(string $name, $value):void{
 		$this->set($name, $value);
 	}
 
@@ -41,7 +41,7 @@ trait Magic{
 	 *
 	 * @return mixed|null
 	 */
-	private function get(string $name) {
+	private function get(string $name){
 		$method = 'magic_get_'.$name;
 
 		return method_exists($this, $method) ? $this->$method() : null;
@@ -53,7 +53,7 @@ trait Magic{
 	 *
 	 * @return void
 	 */
-	private function set(string $name, $value) {
+	private function set(string $name, $value):void{
 		$method = 'magic_set_'.$name;
 
 		if(method_exists($this, $method)){

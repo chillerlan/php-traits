@@ -12,7 +12,7 @@
 
 namespace chillerlan\TraitTest\Container;
 
-use chillerlan\Traits\ContainerAbstract;
+use chillerlan\Traits\ImmutableSettingsAbstract;
 
 /**
  * @property $test1
@@ -20,7 +20,7 @@ use chillerlan\Traits\ContainerAbstract;
  * @property $test3
  * @property $testConstruct
  */
-class TestContainer extends ContainerAbstract{
+class TestContainer extends ImmutableSettingsAbstract{
 	use TestOptionsTrait;
 
 	private  $test3 = 'what';

@@ -76,6 +76,7 @@ trait Env{
 			}
 			// @codeCoverageIgnoreStart
 			elseif(function_exists('apache_getenv')){
+				/** @noinspection PhpComposerExtensionStubsInspection */
 				$env = apache_getenv($var);
 			}
 			// @codeCoverageIgnoreEnd
@@ -103,6 +104,7 @@ trait Env{
 
 			// @codeCoverageIgnoreStart
 			if(function_exists('apache_setenv')){
+				/** @noinspection PhpComposerExtensionStubsInspection */
 				apache_setenv($var, $value);
 			}
 			// @codeCoverageIgnoreEnd
@@ -189,8 +191,8 @@ trait Env{
 	}
 
 	/**
-	 * @param array $data
-	 * @param bool  $overwrite
+	 * @param string[] $data
+	 * @param bool     $overwrite
 	 *
 	 * @return $this
 	 */
@@ -221,7 +223,7 @@ trait Env{
 	 *
 	 * @return string|null
 	 */
-	private function __parse(string $value = null){
+	private function __parse(string $value = null):?string{
 
 		if($value !== null){
 

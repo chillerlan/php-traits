@@ -1,8 +1,8 @@
 <?php
 /**
- * Trait Container
+ * Trait ImmutableSettingsContainer
  *
- * @filesource   Container.php
+ * @filesource   ImmutableSettingsContainer.php
  * @created      13.11.2017
  * @package      chillerlan\Traits
  * @author       Smiley <smiley@chillerlan.net>
@@ -17,12 +17,12 @@ use ReflectionClass, ReflectionProperty;
 /**
  * a generic container with magic getter and setter
  */
-trait Container{
+trait ImmutableSettingsContainer{
 
 	/**
-	 * @param iterable $properties
+	 * @param iterable|null $properties
 	 */
-	public function __construct(array $properties = null){
+	public function __construct(iterable $properties = null){
 
 		if(!empty($properties)){
 			$this->__fromIterable($properties);
@@ -60,7 +60,7 @@ trait Container{
 	 *
 	 * @return void
 	 */
-	public function __set(string $property, $value){
+	public function __set(string $property, $value):void{
 
 		// avoid overwriting private properties
 		if(property_exists($this, $property) && !$this->__isPrivate($property)){
@@ -94,7 +94,7 @@ trait Container{
 	 *
 	 * @return void
 	 */
-	public function __unset(string $property){
+	public function __unset(string $property):void{
 
 		// avoid unsetting private properties
 		if($this->__isset($property)){
@@ -133,7 +133,7 @@ trait Container{
 	 *
 	 * @return $this
 	 */
-	public function __fromIterable(array $properties){
+	public function __fromIterable(iterable $properties){
 
 		foreach($properties as $key => $value){
 			$this->__set($key, $value);

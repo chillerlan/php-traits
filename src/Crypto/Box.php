@@ -23,13 +23,11 @@ class Box extends CryptoBox{
 	 */
 	public function create(string &$message, string &$nonce_bin = null):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_BOX_SECRETKEYBYTES, SODIUM_CRYPTO_BOX_PUBLICKEYBYTES);
-		$message = $this->checkMessage($message);
 
+		$message     = $this->checkMessage($message);
+		$keypair     = sodium_crypto_box_keypair_from_secretkey_and_publickey($this->keypair->secret, $this->keypair->public);
 		$this->nonce = $nonce_bin ?? random_bytes(SODIUM_CRYPTO_BOX_NONCEBYTES);
-
-		$keypair = sodium_crypto_box_keypair_from_secretkey_and_publickey($this->keypair->secret, $this->keypair->public);
-
-		$this->box = sodium_crypto_box($message, $this->nonce, $keypair);
+		$this->box   = sodium_crypto_box($message, $this->nonce, $keypair);
 
 		sodium_memzero($keypair);
 		sodium_memzero($message);
@@ -51,8 +49,7 @@ class Box extends CryptoBox{
 	public function open(string &$box_bin, string &$nonce_bin):CryptoBoxInterface{
 		$this->checkKeypair(SODIUM_CRYPTO_BOX_SECRETKEYBYTES, SODIUM_CRYPTO_BOX_PUBLICKEYBYTES);
 
-		$keypair = sodium_crypto_box_keypair_from_secretkey_and_publickey($this->keypair->secret, $this->keypair->public);
-
+		$keypair       = sodium_crypto_box_keypair_from_secretkey_and_publickey($this->keypair->secret, $this->keypair->public);
 		$this->message = sodium_crypto_box_open($box_bin, $nonce_bin, $keypair);
 
 		sodium_memzero($keypair);

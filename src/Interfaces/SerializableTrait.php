@@ -28,7 +28,7 @@ trait SerializableTrait{
 	 * @link  http://php.net/manual/serializable.serialize.php
 	 * @inheritdoc
 	 */
-	public function serialize():string {
+	public function serialize():string{
 		return serialize($this->array);
 	}
 

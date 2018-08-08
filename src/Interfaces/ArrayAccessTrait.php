@@ -49,7 +49,7 @@ trait ArrayAccessTrait{
 	 * @link  http://php.net/manual/arrayaccess.offsetset.php
 	 * @inheritdoc
 	 */
-	public function offsetSet($offset, $value){
+	public function offsetSet($offset, $value):void{
 
 		$offset !== null
 			? $this->array[$offset] = $value
@@ -60,7 +60,7 @@ trait ArrayAccessTrait{
 	 * @link  http://php.net/manual/arrayaccess.offsetunset.php
 	 * @inheritdoc
 	 */
-	public function offsetUnset($offset){
+	public function offsetUnset($offset):void{
 		unset($this->array[$offset]);
 	}
 

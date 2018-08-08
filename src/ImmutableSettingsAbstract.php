@@ -1,8 +1,8 @@
 <?php
 /**
- * Class ContainerAbstract
+ * Class ImmutableSettingsAbstract
  *
- * @filesource   ContainerAbstract.php
+ * @filesource   ImmutableSettingsAbstract.php
  * @created      24.01.2018
  * @package      chillerlan\Traits
  * @author       Smiley <smiley@chillerlan.net>
@@ -12,6 +12,6 @@
 
 namespace chillerlan\Traits;
 
-abstract class ContainerAbstract implements ContainerInterface{
-	use Container;
+abstract class ImmutableSettingsAbstract implements ImmutableSettingsInterface{
+	use ImmutableSettingsContainer;
 }
