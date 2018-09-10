@@ -1,6 +1,6 @@
 # chillerlan/php-traits
 
-A collection of (more or less) useful traits for PHP7+
+A collection of (more or less) useful traits for PHP7.2+
   
 [![version][packagist-badge]][packagist]
 [![license][license-badge]][license]
@@ -27,21 +27,13 @@ A collection of (more or less) useful traits for PHP7+
 
 ## Features
 - `ClassLoader` - invokes objects of a given class and interface/type with an arbitrary count of constructor arguments
-- `ImmutableSettingsContainer` - provides immutable properties with magic getter & setter and some fancy, implements `ImmutableSettingsInterface`
 - `Magic` - turns methods into magic properties
 - `Enumerable` - provides some of [prototype's enumerable methods](http://api.prototypejs.org/language/Enumerable/), implements `EnumerableInterface`
-- `Env` - loads contents from a `.env` file into the environment (similar to [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv))
-  - `DotEnv` - a standalone `Env` class
 - `ArrayHelpers`
   - `ByteArray` - useful for byte/bit-flipping purposes, extends [`SplFixedArray`](http://php.net/manual/class.splfixedarray.php)
   - `ByteArrayDispenser` - creates `ByteArray` from several data types (hex, base64, binary, json etc.)
   - `DotArray` - adds dot key notation functionality
   - `SearchableArray` - deep search arrays using [`RecursiveIteratorIterator`](http://php.net/manual/class.recursiveiteratoriterator.php)
-- `Crypto` (requires the [Sodium extension](http://php.net/manual/book.sodium.php))
-  - `CryptoBoxInterface`: `Box`, `SecretBox`, `SealedBox`, `SignedMessage`
-  - `CryptoKeyInterface`: `BoxKeypair`, `SignKeypair`
-  - `CryptoTrait` provides shorthand methods for the above
-  - `MemzeroDestructorTrait` - performs `sodium_memzero` on object variables when `__destruct()` is being called
 - `Interfaces`
   - `ArrayAccessTrait` - implements [`ArrayAccess`](http://php.net/manual/class.arrayaccess.php)
   - `IteratorTrait` - implements [`Iterator`](http://php.net/manual/class.iterator.php)
@@ -58,7 +50,7 @@ A collection of (more or less) useful traits for PHP7+
 ```json
 {
 	"require": {
-		"php": ">=7.0.3",
+		"php": "^7.2",
 		"chillerlan/php-traits": "dev-master"
 	}
 }
@@ -122,74 +114,6 @@ class MyClass{
 }
 ```
 
-
-#### `ImmutableSettingsContainer`
-
-The `ImmutableSettingsContainer` trait (wrapped in`ImmutableSettingsAbstract` ) provides plug-in functionality for immutable object variables and adds some fancy, like loading/saving JSON, arrays etc. 
-It takes an array (planned: iterable) as the only constructor argument and calls a method (`MyTrait::MyTrait()`) for each trait on invocation.
-
-##### Simple usage
-```php
-class MyContainer extends ImmutableSettingsAbstract{
-
-	protected $foo;
-	protected $bar;
-	
-}
-```
-
-```php
-// use it just like a \stdClass
-$container = new MyContainer;
-$container->foo = 'what';
-$container->bar = 'foo';
-
-// which is equivalent to 
-$container = new MyContainer(['bar' => 'foo', 'foo' => 'what']);
-// ...or try
-$container->__fromJSON('{"foo": "what", "bar": "foo"}');
-
-
-// fetch all properties as array
-$container->__toArray(); // -> ['foo' => 'what', 'bar' => 'foo']
-// or JSON
-$container->__toJSON(); // -> {"foo": "what", "bar": "foo"}
-
-//non-existing properties will be ignored:
-$container->nope = 'what';
-
-var_dump($container->nope); // -> null
-```
-
-##### Advanced usage
-```php
-trait SomeOptions{
-	protected $foo;
-	
-	// this method will be called in ImmutableSettingsAbstract::__construct() after the properties have been set
-	protected function SomeOptions(){
-		// just some constructor stuff...
-		$this->foo = strtoupper($this->foo);
-	}
-}
-
-trait MoreOptions{
-	protected $bar;
-}
-```
-
-```php
-$commonOptions = [
-	// SomeOptions
-	'foo' => 'whatever', 
-	// MoreOptions
-	'bar' => 'nothing',
-];
-
-$container = new class ($commonOptions) extends ImmutableSettingsAbstract{
-	use SomeOptions, MoreOptions;
-};
-```
 
 #### `Magic`
 `Magic` allows to access internal methods like as properties.
@@ -255,42 +179,4 @@ $arr = $enum->__map(function($value, $index){
 
 $enum;
 
-```
-
-#### `Env`
-```
-# example .env
-FOO=bar
-BAR=foo
-WHAT=${BAR}-${FOO}
-```
-
-```php
-class MyClass{
-	use Env;
-	
-	protected $foo;
-	
-	public function __construct(){
-		// load and overwrite existing vars, require var "WHAT"
-		$this->__loadEnv(__DIR__.'/../config', '.env', ['WHAT']);
-		
-		// will not overwrite
-		$this->__addEnv(__DIR__.'/../config', '.env', false, ['WHAT']); 
-		
-		$this->foo = $_ENV['WHAT']; // -> foo-bar
-		// or
-		$this->foo = $this->__getEnv('WHAT');
-	}
-}
-```
-
-```php
-$env = new DotEnv(__DIR__.'/../config', '.env');
-$env->load(['foo']); // foo is required
-
-$foo = $env->get('FOO'); // -> bar
-
-$foo = $env->set('foo', 'whatever');
-$foo = $env->get('FOO'); // -> whatever
 ```
