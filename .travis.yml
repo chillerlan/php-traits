@@ -3,17 +3,10 @@ language: php
 matrix:
   include:
   - php: 7.2
+  - php: 7.3
   - php: nightly
   allow_failures:
   - php: nightly
-
-before_install:
-  # Manually compile the libsodium library. This sucks, Travis. https://github.com/travis-ci/travis-ci/issues/8863
-  - git clone -b stable https://github.com/jedisct1/libsodium.git
-  - cd libsodium && sudo ./configure && sudo make check && sudo make install && cd ..
-
-install:
-  - pecl install libsodium
 
 before_script: travis_retry composer install --no-interaction --prefer-source
 
