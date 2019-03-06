@@ -12,6 +12,7 @@
 
 namespace chillerlan\TraitTest\Enumerable;
 
+use chillerlan\Traits\TraitException;
 use PHPUnit\Framework\TestCase;
 
 class EnumerableTest extends TestCase{
@@ -23,7 +24,7 @@ class EnumerableTest extends TestCase{
 	 */
 	protected $enumerable;
 
-	protected function setUp(){
+	protected function setUp():void{
 		$this->enumerable = new EnumerableContainer($this->array);
 	}
 
@@ -112,27 +113,24 @@ class EnumerableTest extends TestCase{
 		$this->assertSame([1, 3, 5], $arr);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid callback
-	 */
 	public function testMapInvalidCallback(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid callback');
+
 		(new EnumerableContainer([]))->__map('foo');
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid callback
-	 */
 	public function testFindAllInvalidCallback(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid callback');
+
 		(new EnumerableContainer([]))->__findAll('foo');
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid callback
-	 */
 	public function testRejectInvalidCallback(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid callback');
+
 		(new EnumerableContainer([]))->__reject('foo');
 	}
 

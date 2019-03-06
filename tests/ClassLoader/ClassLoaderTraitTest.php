@@ -13,6 +13,7 @@
 namespace chillerlan\TraitTest\ClassLoader;
 
 use chillerlan\Traits\ClassLoader;
+use chillerlan\Traits\TraitException;
 use PHPUnit\Framework\TestCase;
 
 class ClassLoaderTraitTest extends TestCase{
@@ -37,59 +38,52 @@ class ClassLoaderTraitTest extends TestCase{
 		$this->assertSame('whatever', $obj->bar());
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage \whatever\foo does not exist
-	 */
 	public function testLoadClassExceptionA1(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('\whatever\foo does not exist');
+
 		$this->loadClass('\\whatever\\foo', tInterface::class);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage \whatever\bar does not exist
-	 */
 	public function testLoadClassExceptionA2(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('\whatever\bar does not exist');
+
 		$this->loadClass(tClass::class, '\\whatever\\bar');
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage cannot be an instance of trait
-	 */
 	public function testLoadClassExceptionB(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('cannot be an instance of trait');
+
 		$this->loadClass(tClass::class, tTrait::class);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage cannot instance abstract class
-	 */
 	public function testLoadClassExceptionC(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('cannot instance abstract class');
+
 		$this->loadClass(tAbstract::class, tInterface::class);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage cannot instance trait
-	 */
 	public function testLoadClassExceptionD(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('cannot instance trait');
+
 		$this->loadClass(tTrait::class, tInterface::class);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage does not implement
-	 */
 	public function testLoadClassExceptionE1(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('does not implement');
+
 		$this->loadClass(tClass::class, tInterface2::class);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage does not inherit
-	 */
 	public function testLoadClassExceptionE2(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('does not inherit');
+
 		$this->loadClass(tClass::class, \stdClass::class);
 	}
 

@@ -12,6 +12,7 @@
 
 namespace chillerlan\TraitTest\Interfaces;
 
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 
 class ArrayAccessTest extends TestCase{
@@ -42,11 +43,10 @@ class ArrayAccessTest extends TestCase{
 		$this->assertCount(0, $x);
 	}
 
-	/**
-	 * @expectedException \OutOfBoundsException
-	 * @expectedExceptionMessage invalid seek position: 69
-	 */
 	public function testSeekInvalidPos(){
+		$this->expectException(OutOfBoundsException::class);
+		$this->expectExceptionMessage('invalid seek position: 69');
+
 		$x = new TestArrayAccessContainer;
 		$x->seek(69);
 	}

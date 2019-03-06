@@ -13,6 +13,7 @@
 namespace chillerlan\TraitTest;
 
 use chillerlan\Traits\ArrayHelpers\ByteArrayDispenser;
+use chillerlan\Traits\TraitException;
 use PHPUnit\Framework\TestCase;
 
 class ByteArrayTest extends TestCase{
@@ -22,7 +23,7 @@ class ByteArrayTest extends TestCase{
 	 */
 	protected $arrayDispenser;
 
-	protected function setUp(){
+	protected function setUp():void{
 		$this->arrayDispenser = new ByteArrayDispenser;
 	}
 
@@ -76,59 +77,52 @@ class ByteArrayTest extends TestCase{
 		$this->assertSame('000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f', $this->arrayDispenser->guessFrom($from)->toHex());
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid input
-	 */
 	public function testGuessFromInvalidData(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid input');
+
 		$this->arrayDispenser->guessFrom(new \stdClass);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid size
-	 */
 	public function testInvalidIntException(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid size');
+
 		$this->arrayDispenser->fromIntSize(-1);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid length
-	 */
 	public function testInvalidRangeException(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid length');
+
 		$this->arrayDispenser->fromArrayFill(-1, 1);
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid hex string
-	 */
 	public function testInvalidHexException(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid hex string');
+
 		$this->arrayDispenser->fromHex('foo');
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid JSON array
-	 */
 	public function testInvalidJSONException(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid JSON array');
+
 		$this->arrayDispenser->fromJSON('{}');
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid base64 string
-	 */
 	public function testInvalidBase64Exception(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid base64 string');
+
 		$this->arrayDispenser->fromBase64('\\');
 	}
 
-	/**
-	 * @expectedException \chillerlan\Traits\TraitException
-	 * @expectedExceptionMessage invalid binary string
-	 */
 	public function testInvalidBinException(){
+		$this->expectException(TraitException::class);
+		$this->expectExceptionMessage('invalid binary string');
+
 		$this->arrayDispenser->fromBin('2');
 	}
 
