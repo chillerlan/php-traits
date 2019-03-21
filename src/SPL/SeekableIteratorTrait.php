@@ -33,7 +33,7 @@ trait SeekableIteratorTrait{
 
 		for( ; $this->offset < $pos; ){
 
-			if(!next($this->array)) {
+			if(!\next($this->array)) {
 				throw new OutOfBoundsException('invalid seek position: '.$pos);
 			}
 

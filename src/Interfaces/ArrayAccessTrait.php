@@ -34,7 +34,7 @@ trait ArrayAccessTrait{
 	 * @inheritdoc
 	 */
 	public function offsetExists($offset):bool{
-		return array_key_exists($offset, $this->array);
+		return \array_key_exists($offset, $this->array);
 	}
 
 	/**

@@ -34,9 +34,9 @@ interface EnumerableInterface{
 	public function __map($callback):array;
 
 	/**
-	 * @return mixed
+	 * @return \chillerlan\Traits\EnumerableInterface
 	 */
-	public function __reverse();
+	public function __reverse():EnumerableInterface;
 
 	/**
 	 * @return mixed
@@ -49,9 +49,9 @@ interface EnumerableInterface{
 	public function __last();
 
 	/**
-	 * @return mixed
+	 * @return \chillerlan\Traits\EnumerableInterface
 	 */
-	public function __clear();
+	public function __clear():EnumerableInterface;
 
 	/**
 	 * @return string

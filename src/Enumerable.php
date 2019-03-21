@@ -62,14 +62,14 @@ trait Enumerable{
 	 */
 	public function __map($callback):array {
 
-		if(!is_callable($callback)){
+		if(!\is_callable($callback)){
 			throw new TraitException('invalid callback');
 		}
 
 		$return = [];
 
 		foreach($this->array as $index => $element){
-			$return[$index] = call_user_func_array($callback, [$element, $index]);
+			$return[$index] = \call_user_func_array($callback, [$element, $index]);
 		}
 
 		return $return;
@@ -78,10 +78,10 @@ trait Enumerable{
 	/**
 	 * @link http://api.prototypejs.org/language/Array/prototype/reverse/
 	 *
-	 * @return $this
+	 * @return \chillerlan\Traits\EnumerableInterface
 	 */
-	public function __reverse(){
-		$this->array  = array_reverse($this->array);
+	public function __reverse():EnumerableInterface{
+		$this->array  = \array_reverse($this->array);
 		$this->offset = 0;
 
 		return $this;
@@ -98,13 +98,13 @@ trait Enumerable{
 	 * @return mixed
 	 */
 	public function __last(){
-		return $this->array[count($this->array) - 1] ?? null;
+		return $this->array[\count($this->array) - 1] ?? null;
 	}
 
 	/**
-	 * @return $this
+	 * @return \chillerlan\Traits\EnumerableInterface
 	 */
-	public function __clear(){
+	public function __clear():EnumerableInterface{
 		$this->array = [];
 
 		return $this;
@@ -116,7 +116,7 @@ trait Enumerable{
 	 * @return string
 	 */
 	public function __inspect():string {
-		return print_r($this->array, true);
+		return \print_r($this->array, true);
 	}
 
 	/**
@@ -129,7 +129,7 @@ trait Enumerable{
 	 */
 	public function __findAll($callback):array{
 
-		if(!is_callable($callback)){
+		if(!\is_callable($callback)){
 			throw new TraitException('invalid callback');
 		}
 
@@ -137,7 +137,7 @@ trait Enumerable{
 
 		foreach($this->array as $index => $element){
 
-			if(call_user_func_array($callback, [$element, $index]) === true){
+			if(\call_user_func_array($callback, [$element, $index]) === true){
 				$return[] = $element;
 			}
 
@@ -156,7 +156,7 @@ trait Enumerable{
 	 */
 	public function __reject($callback):array{
 
-		if(!is_callable($callback)){
+		if(!\is_callable($callback)){
 			throw new TraitException('invalid callback');
 		}
 
@@ -164,7 +164,7 @@ trait Enumerable{
 
 		foreach($this->array as $index => $element){
 
-			if(call_user_func_array($callback, [$element, $index]) !== true){
+			if(\call_user_func_array($callback, [$element, $index]) !== true){
 				$return[] = $element;
 			}
 

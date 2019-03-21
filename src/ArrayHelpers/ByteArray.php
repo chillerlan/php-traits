@@ -31,7 +31,7 @@ class ByteArray extends SplFixedArray{
 	 */
 	public function toHex():string{
 		return $this->map(function($v){
-			return str_pad(dechex($v), '2', '0', STR_PAD_LEFT);
+			return \str_pad(\dechex($v), '2', '0', \STR_PAD_LEFT);
 		});
 	}
 
@@ -39,14 +39,14 @@ class ByteArray extends SplFixedArray{
 	 * @return string
 	 */
 	public function toJSON():string{
-		return json_encode($this->toArray());
+		return \json_encode($this->toArray());
 	}
 
 	/**
 	 * @return string
 	 */
 	public function toBase64():string{
-		return base64_encode($this->toString());
+		return \base64_encode($this->toString());
 	}
 
 	/**
@@ -54,7 +54,7 @@ class ByteArray extends SplFixedArray{
 	 */
 	public function toBin():string{
 		return $this->map(function($v){
-			return str_pad(decbin($v), '8', '0', STR_PAD_LEFT);
+			return \str_pad(\decbin($v), '8', '0', \STR_PAD_LEFT);
 		});
 	}
 
@@ -64,7 +64,7 @@ class ByteArray extends SplFixedArray{
 	 * @return string
 	 */
 	public function map(callable $m):string{
-		return implode('', array_map($m, $this->toArray()));
+		return \implode('', \array_map($m, $this->toArray()));
 	}
 
 	/**

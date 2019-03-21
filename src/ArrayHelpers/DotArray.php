@@ -38,9 +38,9 @@ trait DotArray{
 
 		$array = &$this->array;
 
-		foreach(explode('.', $dotKey) as $segment){
+		foreach(\explode('.', $dotKey) as $segment){
 
-			if(!is_array($array) || !array_key_exists($segment, $array)){
+			if(!\is_array($array) || !\array_key_exists($segment, $array)){
 				return $default;
 			}
 
@@ -63,15 +63,15 @@ trait DotArray{
 			return false;
 		}
 
-		if(array_key_exists($dotKey, $this->array)){
+		if(\array_key_exists($dotKey, $this->array)){
 			return true;
 		}
 
 		$array = &$this->array;
 
-		foreach(explode('.', $dotKey) as $segment){
+		foreach(\explode('.', $dotKey) as $segment){
 
-			if(!is_array($array) || !array_key_exists($segment, $array)){
+			if(!\is_array($array) || !\array_key_exists($segment, $array)){
 				return false;
 			}
 
@@ -100,22 +100,22 @@ trait DotArray{
 		}
 
 		$array = &$this->array;
-		$keys = explode('.', $dotKey);
+		$keys = \explode('.', $dotKey);
 
-		while(count($keys) > 1){
-			$dotKey = array_shift($keys);
+		while(\count($keys) > 1){
+			$dotKey = \array_shift($keys);
 
 			// If the key doesn't exist at this depth, we will just create an empty array
 			// to hold the next value, allowing us to create the arrays to hold final
 			// values at the correct depth. Then we'll keep digging into the array.
-			if(!isset($array[$dotKey]) || !is_array($array[$dotKey])){
+			if(!isset($array[$dotKey]) || !\is_array($array[$dotKey])){
 				$array[$dotKey] = [];
 			}
 
 			$array = &$array[$dotKey];
 		}
 
-		$array[array_shift($keys)] = $value;
+		$array[\array_shift($keys)] = $value;
 
 		return $this;
 	}

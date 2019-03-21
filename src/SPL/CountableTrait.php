@@ -29,7 +29,7 @@ trait CountableTrait{
 	 * @inheritdoc
 	 */
 	public function count():int{
-		return count($this->array);
+		return \count($this->array);
 	}
 
 }

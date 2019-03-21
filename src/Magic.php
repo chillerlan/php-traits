@@ -44,7 +44,7 @@ trait Magic{
 	private function get(string $name){
 		$method = 'magic_get_'.$name;
 
-		return method_exists($this, $method) ? $this->$method() : null;
+		return \method_exists($this, $method) ? $this->$method() : null;
 	}
 
 	/**
@@ -56,7 +56,7 @@ trait Magic{
 	private function set(string $name, $value):void{
 		$method = 'magic_set_'.$name;
 
-		if(method_exists($this, $method)){
+		if(\method_exists($this, $method)){
 			$this->$method($value);
 		}
 

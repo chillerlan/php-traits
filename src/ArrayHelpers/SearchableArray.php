@@ -33,13 +33,13 @@ trait SearchableArray{
 			$this->array = $array->getArrayCopy(); // @codeCoverageIgnore
 		}
 		elseif($array instanceof Traversable){
-			$this->array = iterator_to_array($array); // @codeCoverageIgnore
+			$this->array = \iterator_to_array($array); // @codeCoverageIgnore
 		}
 		// yields unexpected results with DotArray
-		elseif(gettype($array) === 'object'){
-			$this->array = get_object_vars($array); // @codeCoverageIgnore
+		elseif(\gettype($array) === 'object'){
+			$this->array = \get_object_vars($array); // @codeCoverageIgnore
 		}
-		elseif(is_array($array)){
+		elseif(\is_array($array)){
 			$this->array = $array;
 		}
 
@@ -109,9 +109,9 @@ trait SearchableArray{
 	 * @return string
 	 */
 	private function getPath():string{
-		return implode('.', array_map(function(int $depth):string {
+		return \implode('.', \array_map(function(int $depth):string {
 			return $this->iterator->getSubIterator($depth)->key();
-		}, range(0, $this->iterator->getDepth())));
+		}, \range(0, $this->iterator->getDepth())));
 	}
 
 }

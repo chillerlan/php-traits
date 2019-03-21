@@ -59,7 +59,7 @@ trait IteratorTrait{
 	 * @inheritdoc
 	 */
 	public function valid():bool{
-		return array_key_exists($this->offset, $this->array);
+		return \array_key_exists($this->offset, $this->array);
 	}
 
 	/**
